@@ -675,42 +675,9 @@ function apiJsonp(params={}, body=null) {
     s.onload = () => clearTimeout(tid);
     document.head.appendChild(s);
   });
-}, body=null) {
-  if (!GAS_URL) { toast('ยังไม่ได้ตั้งค่า GAS URL','err'); throw new Error('no url'); }
-  // ใช้ JSONP เพื่อหลีกเลี่ยง CORS ทั้งหมด
-  return new Promise((resolve, reject) => {
-    const cbName = 'cb_' + Date.now() + '_' + Math.random().toString(36).substr(2,5);
-    const merged = { ...params, callback: cbName };
-    if (body) merged.payload = JSON.stringify(body);
-    const qs  = new URLSearchParams(merged).toString();
-    const url = GAS_URL + '?' + qs;
-
-    window[cbName] = (data) => {
-      delete window[cbName];
-      document.head.removeChild(script);
-      if (!data.ok) reject(new Error(data.error || 'API error'));
-      else resolve(data);
-    };
-
-    const script = document.createElement('script');
-    script.src = url;
-    script.onerror = () => {
-      delete window[cbName];
-      document.head.removeChild(script);
-      reject(new Error('โหลด script ไม่สำเร็จ — ตรวจสอบ GAS URL'));
-    };
-    setTimeout(() => {
-      if (window[cbName]) {
-        delete window[cbName];
-        try { document.head.removeChild(script); } catch(e){}
-        reject(new Error('timeout — GAS ไม่ตอบสนองใน 15 วินาที'));
-      }
-    }, 15000);
-    document.head.appendChild(script);
-  });
-}
 
 // ============================================================
+}
 //  DASHBOARD
 // ============================================================
 async function loadDashboard() {
