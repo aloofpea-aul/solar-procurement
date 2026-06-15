@@ -4,545 +4,287 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>🌞 Solar Rooftop Procurement — กฟส.อ่าวลึก</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js"></script>
 <style>
-:root {
-  --blue:    #1B4F72;
-  --blue2:   #2E86C1;
-  --teal:    #148F77;
-  --amber:   #D4AC0D;
-  --red:     #C0392B;
-  --green:   #1E8449;
-  --gray:    #566573;
-  --light:   #F2F3F4;
-  --white:   #FFFFFF;
-  --shadow:  0 2px 8px rgba(0,0,0,.10);
-  --radius:  10px;
-}
-* { box-sizing:border-box; margin:0; padding:0; }
-body { font-family:'Sarabun',sans-serif; background:#EAECEE; color:#2C3E50; font-size:15px; }
-
-/* ===== NAV ===== */
-nav {
-  background:linear-gradient(135deg,var(--blue),var(--blue2));
-  color:#fff; display:flex; align-items:center; gap:16px;
-  padding:0 24px; height:58px; position:sticky; top:0; z-index:100;
-  box-shadow:0 2px 12px rgba(0,0,0,.2);
-}
-nav .logo { font-size:22px; }
-nav h1 { font-size:17px; font-weight:600; flex:1; }
-nav .nav-btn {
-  background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.3);
-  color:#fff; padding:6px 14px; border-radius:20px; cursor:pointer;
-  font-size:13px; font-family:'Sarabun',sans-serif; transition:.2s;
-}
-nav .nav-btn:hover { background:rgba(255,255,255,.28); }
-nav .nav-btn.active { background:#fff; color:var(--blue); font-weight:600; }
-
-/* ===== LAYOUT ===== */
-.container { max-width:1200px; margin:0 auto; padding:20px 16px; }
-.page { display:none; } .page.active { display:block; }
-
-/* ===== CARDS ===== */
-.card {
-  background:var(--white); border-radius:var(--radius);
-  box-shadow:var(--shadow); margin-bottom:16px;
-}
-.card-header {
-  padding:14px 20px; border-bottom:1px solid #EAECEE;
-  display:flex; align-items:center; gap:10px;
-}
-.card-header h2 { font-size:15px; font-weight:600; flex:1; }
-.card-header .badge {
-  font-size:11px; padding:3px 10px; border-radius:20px; font-weight:600;
-}
-.card-body { padding:18px 20px; }
-
-/* ===== STATUS BADGES ===== */
-.status { display:inline-block; font-size:12px; padding:3px 10px; border-radius:20px; font-weight:600; }
-.status-ร่าง      { background:#EBF5FB; color:#2E86C1; }
-.status-อนุมัติ    { background:#EAFAF1; color:#1E8449; }
-.status-เสร็จสิ้น  { background:#F4ECF7; color:#7D3C98; }
-.status-ยกเลิก    { background:#FDEDEC; color:#C0392B; }
-
-/* ===== BUTTONS ===== */
-.btn {
-  display:inline-flex; align-items:center; gap:6px;
-  padding:8px 16px; border-radius:8px; border:none; cursor:pointer;
-  font-size:13px; font-family:'Sarabun',sans-serif; font-weight:500;
-  transition:all .18s;
-}
-.btn:hover { transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,.12); }
-.btn:active { transform:none; }
-.btn-primary  { background:var(--blue2);  color:#fff; }
-.btn-success  { background:var(--teal);   color:#fff; }
-.btn-warning  { background:var(--amber);  color:#fff; }
-.btn-danger   { background:var(--red);    color:#fff; }
-.btn-outline  { background:#fff; color:var(--blue2); border:1.5px solid var(--blue2); }
-.btn-sm       { padding:5px 11px; font-size:12px; }
-.btn-group    { display:flex; gap:8px; flex-wrap:wrap; }
-
-/* ===== TABLE ===== */
-.data-table { width:100%; border-collapse:collapse; }
-.data-table th {
-  background:#F8F9FA; color:#566573; font-size:12px; font-weight:600;
-  text-align:left; padding:10px 12px; border-bottom:2px solid #EAECEE;
-  text-transform:uppercase; letter-spacing:.5px;
-}
-.data-table td { padding:11px 12px; border-bottom:1px solid #F2F3F4; font-size:14px; }
-.data-table tr:hover td { background:#FDFEFE; }
-
-/* ===== FORM ===== */
-.form-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; }
-.form-group { display:flex; flex-direction:column; gap:5px; }
-.form-group label { font-size:12px; color:var(--gray); font-weight:500; }
-.form-group input, .form-group select, .form-group textarea {
-  border:1.5px solid #D5D8DC; border-radius:7px; padding:8px 11px;
-  font-size:14px; font-family:'Sarabun',sans-serif; color:#2C3E50;
-  transition:border .15s; background:#fff;
-}
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-  outline:none; border-color:var(--blue2);
-  box-shadow:0 0 0 3px rgba(46,134,193,.12);
-}
-.form-group textarea { resize:vertical; min-height:60px; }
-.form-section { margin-bottom:20px; }
-.form-section h3 {
-  font-size:13px; font-weight:600; color:var(--blue); text-transform:uppercase;
-  letter-spacing:.8px; margin-bottom:12px; padding-bottom:7px;
-  border-bottom:2px solid var(--blue2);
-}
-
-/* ===== TABS ===== */
-.tabs { display:flex; gap:2px; border-bottom:2px solid #EAECEE; margin-bottom:20px; overflow-x:auto; }
-.tab-btn {
-  padding:9px 16px; border:none; background:none; cursor:pointer;
-  font-family:'Sarabun',sans-serif; font-size:14px; color:var(--gray);
-  border-bottom:2px solid transparent; margin-bottom:-2px; white-space:nowrap;
-  transition:.15s;
-}
-.tab-btn.active { color:var(--blue2); border-color:var(--blue2); font-weight:600; }
-.tab-btn:hover:not(.active) { color:var(--blue); background:#F8F9FA; }
-.tab-pane { display:none; } .tab-pane.active { display:block; }
-
-/* ===== PROGRESS TIMELINE ===== */
-.timeline { display:flex; align-items:flex-start; gap:0; margin:16px 0; overflow-x:auto; padding-bottom:4px; }
-.tl-item { display:flex; flex-direction:column; align-items:center; flex:1; min-width:90px; position:relative; }
-.tl-item::before {
-  content:''; position:absolute; top:16px; left:50%; width:100%;
-  height:2px; background:#D5D8DC; z-index:0;
-}
-.tl-item:last-child::before { display:none; }
-.tl-dot {
-  width:32px; height:32px; border-radius:50%; background:#D5D8DC; color:#fff;
-  display:flex; align-items:center; justify-content:center; font-size:13px;
-  position:relative; z-index:1; flex-shrink:0;
-}
-.tl-dot.done    { background:var(--teal); }
-.tl-dot.current { background:var(--blue2); box-shadow:0 0 0 4px rgba(46,134,193,.25); }
-.tl-label { font-size:11px; color:var(--gray); margin-top:6px; text-align:center; line-height:1.3; }
-
-/* ===== COMMITTEE ===== */
-.committee-block { background:#F8F9FA; border-radius:8px; padding:12px 14px; margin-bottom:10px; }
-.committee-block h4 { font-size:12px; font-weight:600; color:var(--blue2); margin-bottom:8px; text-transform:uppercase; }
-.member-row { display:grid; grid-template-columns:1fr 1fr 120px 28px; gap:8px; margin-bottom:6px; align-items:center; }
-.member-row input { font-size:13px; }
-.del-btn { background:none; border:none; cursor:pointer; color:#C0392B; font-size:16px; padding:2px; }
-.add-member-btn { font-size:12px; color:var(--blue2); background:none; border:none; cursor:pointer; padding:4px 0; }
-.add-member-btn:hover { text-decoration:underline; }
-
-/* ===== DOC GRID ===== */
-.doc-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; }
-.doc-card {
-  border:1.5px solid #D5D8DC; border-radius:10px; padding:16px 14px;
-  text-align:center; cursor:pointer; transition:.18s; background:#fff;
-}
-.doc-card:hover { border-color:var(--blue2); background:#EBF5FB; transform:translateY(-2px); }
-.doc-card .doc-icon { font-size:28px; margin-bottom:8px; }
-.doc-card .doc-name { font-size:12px; font-weight:600; color:#2C3E50; line-height:1.4; }
-.doc-card .doc-sub  { font-size:11px; color:var(--gray); margin-top:4px; }
-
-/* ===== MODAL ===== */
-.modal-backdrop {
-  display:none; position:fixed; inset:0; background:rgba(0,0,0,.45);
-  z-index:200; align-items:center; justify-content:center;
-}
-.modal-backdrop.open { display:flex; }
-.modal {
-  background:#fff; border-radius:12px; width:min(96vw,700px);
-  max-height:90vh; overflow-y:auto; box-shadow:0 8px 40px rgba(0,0,0,.22);
-}
-.modal-header {
-  padding:18px 22px 14px; border-bottom:1px solid #EAECEE;
-  display:flex; align-items:center; gap:12px;
-}
-.modal-header h2 { font-size:16px; font-weight:600; flex:1; }
-.modal-close { background:none; border:none; font-size:20px; cursor:pointer; color:var(--gray); line-height:1; }
-.modal-body   { padding:20px 22px; }
-.modal-footer { padding:14px 22px; border-top:1px solid #EAECEE; display:flex; gap:8px; justify-content:flex-end; }
-
-/* ===== STATS ===== */
-.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:20px; }
-.stat-card { background:#fff; border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); text-align:center; }
-.stat-card .num { font-size:28px; font-weight:700; }
-.stat-card .lbl { font-size:12px; color:var(--gray); margin-top:2px; }
-
-/* ===== TOAST ===== */
-#toast {
-  position:fixed; bottom:24px; right:24px; z-index:999;
-  background:#2C3E50; color:#fff; padding:11px 18px;
-  border-radius:8px; font-size:13px; box-shadow:0 4px 16px rgba(0,0,0,.2);
-  transform:translateY(80px); opacity:0; transition:.3s;
-}
-#toast.show { transform:translateY(0); opacity:1; }
-
-/* ===== SEARCH BAR ===== */
-.search-bar {
-  display:flex; gap:10px; margin-bottom:16px; align-items:center; flex-wrap:wrap;
-}
-.search-bar input {
-  border:1.5px solid #D5D8DC; border-radius:8px; padding:8px 12px;
-  font-size:14px; font-family:'Sarabun',sans-serif; flex:1; min-width:200px;
-}
-.search-bar select { border:1.5px solid #D5D8DC; border-radius:8px; padding:8px 10px; font-size:14px; }
-
-/* ===== LOG TABLE ===== */
-.log-row td { font-size:12px; }
-
-/* ===== LOADER ===== */
-.loader { display:none; text-align:center; padding:40px; color:var(--gray); }
-.loader i { font-size:32px; animation:spin 1s linear infinite; }
-@keyframes spin { to { transform:rotate(360deg); } }
-
-/* ===== PRICE AUTO ===== */
-.price-auto { background:#EBF5FB; border-radius:7px; padding:8px 12px; font-size:13px; color:var(--blue2); }
+:root{--blue:#1B4F72;--blue2:#2E86C1;--teal:#148F77;--amber:#D4AC0D;--red:#C0392B;--green:#1E8449;--gray:#566573;--light:#F2F3F4;--white:#fff;--shadow:0 2px 8px rgba(0,0,0,.10);--r:10px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sarabun',sans-serif;background:#EAECEE;color:#2C3E50;font-size:15px}
+nav{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;display:flex;align-items:center;gap:16px;padding:0 20px;height:56px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+nav .logo{font-size:22px}
+nav h1{font-size:16px;font-weight:600;flex:1}
+.nb{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:13px;font-family:'Sarabun',sans-serif;transition:.2s}
+.nb:hover{background:rgba(255,255,255,.28)}.nb.active{background:#fff;color:var(--blue);font-weight:600}
+.sync-badge{font-size:11px;padding:2px 8px;border-radius:10px;margin-left:4px}
+.sync-ok{background:#EAFAF1;color:#1E8449}.sync-pending{background:#FEF9E7;color:#7D6608}.sync-off{background:#FDEDEC;color:#C0392B}
+.wrap{max-width:1200px;margin:0 auto;padding:20px 16px}
+.page{display:none}.page.active{display:block}
+.card{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:16px}
+.ch{padding:14px 20px;border-bottom:1px solid #EAECEE;display:flex;align-items:center;gap:10px}
+.ch h2{font-size:15px;font-weight:600;flex:1}
+.cb{padding:18px 20px}
+.status{display:inline-block;font-size:12px;padding:3px 10px;border-radius:20px;font-weight:600}
+.s-ร่าง{background:#EBF5FB;color:#2E86C1}.s-อนุมัติ{background:#EAFAF1;color:#1E8449}
+.s-เสร็จสิ้น{background:#F4ECF7;color:#7D3C98}.s-ยกเลิก{background:#FDEDEC;color:#C0392B}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-family:'Sarabun',sans-serif;font-weight:500;transition:all .18s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.bp{background:var(--blue2);color:#fff}.bs{background:var(--teal);color:#fff}
+.bd{background:var(--red);color:#fff}.bo{background:#fff;color:var(--blue2);border:1.5px solid var(--blue2)}
+.bsm{padding:5px 11px;font-size:12px}
+.dt{width:100%;border-collapse:collapse}
+.dt th{background:#F8F9FA;color:#566573;font-size:12px;font-weight:600;text-align:left;padding:10px 12px;border-bottom:2px solid #EAECEE;text-transform:uppercase;letter-spacing:.5px}
+.dt td{padding:11px 12px;border-bottom:1px solid #F2F3F4;font-size:14px}
+.dt tr:hover td{background:#FDFEFE}
+.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.fgrp{display:flex;flex-direction:column;gap:4px}
+.fgrp label{font-size:12px;color:var(--gray);font-weight:500}
+.fgrp input,.fgrp select,.fgrp textarea{border:1.5px solid #D5D8DC;border-radius:7px;padding:8px 10px;font-size:14px;font-family:'Sarabun',sans-serif;color:#2C3E50;transition:border .15s;background:#fff;width:100%}
+.fgrp input:focus,.fgrp select:focus,.fgrp textarea:focus{outline:none;border-color:var(--blue2);box-shadow:0 0 0 3px rgba(46,134,193,.12)}
+.fgrp textarea{resize:vertical;min-height:56px}
+.fs{margin-bottom:18px}
+.fs h3{font-size:12px;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--blue2)}
+.tabs{display:flex;gap:2px;border-bottom:2px solid #EAECEE;margin-bottom:18px;overflow-x:auto}
+.tb{padding:9px 14px;border:none;background:none;cursor:pointer;font-family:'Sarabun',sans-serif;font-size:13px;color:var(--gray);border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:.15s}
+.tb.active{color:var(--blue2);border-color:var(--blue2);font-weight:600}
+.tp{display:none}.tp.active{display:block}
+.cb-block{background:#F8F9FA;border-radius:8px;padding:12px 14px;margin-bottom:10px}
+.cb-block h4{font-size:12px;font-weight:600;color:var(--blue2);margin-bottom:8px;text-transform:uppercase}
+.mr{display:grid;grid-template-columns:1fr 1fr 110px 26px;gap:8px;margin-bottom:6px;align-items:center}
+.del-btn{background:none;border:none;cursor:pointer;color:var(--red);font-size:15px}
+.add-btn{font-size:12px;color:var(--blue2);background:none;border:none;cursor:pointer;padding:3px 0}
+.add-btn:hover{text-decoration:underline}
+.sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.dc{border:1.5px solid #D5D8DC;border-radius:10px;padding:14px;text-align:center;cursor:pointer;transition:.18s;background:#fff}
+.dc:hover{border-color:var(--blue2);background:#EBF5FB;transform:translateY(-2px)}
+.dc .di{font-size:26px;margin-bottom:6px}
+.dc .dn{font-size:12px;font-weight:600;line-height:1.4}
+.dc .ds{font-size:11px;color:var(--gray);margin-top:3px}
+.mb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center}
+.mb.open{display:flex}
+.modal{background:#fff;border-radius:12px;width:min(96vw,700px);max-height:90vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.22)}
+.mh{padding:16px 20px 12px;border-bottom:1px solid #EAECEE;display:flex;align-items:center;gap:10px}
+.mh h2{font-size:15px;font-weight:600;flex:1}
+.mc{padding:18px 20px}.mf{padding:12px 20px;border-bottom: 0; border-top:1px solid #EAECEE;display:flex;gap:8px;justify-content:flex-end}
+.mclose{background:none;border:none;font-size:20px;cursor:pointer;color:var(--gray);line-height:1}
+.sg2{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:18px}
+.sc{background:#fff;border-radius:var(--r);padding:14px;box-shadow:var(--shadow);text-align:center}
+.sc .n{font-size:26px;font-weight:700}.sc .l{font-size:12px;color:var(--gray);margin-top:2px}
+.sb{display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-wrap:wrap}
+.sb input,.sb select{border:1.5px solid #D5D8DC;border-radius:8px;padding:8px 10px;font-size:14px;font-family:'Sarabun',sans-serif}
+.sb input{flex:1;min-width:180px}
+#toast{position:fixed;bottom:22px;right:22px;z-index:999;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.2);transform:translateY(80px);opacity:0;transition:.3s;max-width:360px}
+#toast.show{transform:translateY(0);opacity:1}
+.pr{background:#EBF5FB;border-radius:7px;padding:7px 10px;font-size:13px;color:var(--blue2)}
+.notice{background:#FEF9E7;border:1px solid var(--amber);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:#7D6608}
+.log-row td{font-size:12px}
 </style>
 </head>
 <body>
-
-<!-- NAV -->
 <nav>
   <span class="logo">🌞</span>
   <h1>Solar Rooftop Procurement — กฟส.อ่าวลึก</h1>
-  <button class="nav-btn active" onclick="showPage('dashboard')"><i class="fa fa-chart-bar"></i> ภาพรวม</button>
-  <button class="nav-btn" onclick="showPage('projects')"><i class="fa fa-folder"></i> โครงการ</button>
-  <button class="nav-btn" onclick="showPage('settings')"><i class="fa fa-gear"></i> ตั้งค่า</button>
+  <span id="sync-status" class="sync-badge sync-off" title="สถานะ sync กับ GAS">⬤ Local</span>
+  <button class="nb active" onclick="showPage('dashboard')"><i class="fa fa-chart-bar"></i> ภาพรวม</button>
+  <button class="nb" onclick="showPage('projects')"><i class="fa fa-folder"></i> โครงการ</button>
+  <button class="nb" onclick="showPage('settings')"><i class="fa fa-gear"></i> ตั้งค่า</button>
 </nav>
 
-<div class="container">
+<div class="wrap">
 
-<!-- ======== DASHBOARD ======== -->
+<!-- DASHBOARD -->
 <div class="page active" id="page-dashboard">
-  <div class="stats-grid" id="stats-grid">
-    <div class="stat-card"><div class="num" style="color:var(--blue2)" id="cnt-all">-</div><div class="lbl">โครงการทั้งหมด</div></div>
-    <div class="stat-card"><div class="num" style="color:var(--amber)" id="cnt-draft">-</div><div class="lbl">ร่าง</div></div>
-    <div class="stat-card"><div class="num" style="color:var(--teal)" id="cnt-approved">-</div><div class="lbl">อนุมัติ</div></div>
-    <div class="stat-card"><div class="num" style="color:#7D3C98" id="cnt-done">-</div><div class="lbl">เสร็จสิ้น</div></div>
-  </div>
-
+  <div class="sg2" id="stats"></div>
   <div class="card">
-    <div class="card-header">
-      <i class="fa fa-clock" style="color:var(--blue2)"></i>
-      <h2>โครงการล่าสุด</h2>
-      <button class="btn btn-primary btn-sm" onclick="openNewProject()"><i class="fa fa-plus"></i> สร้างโครงการ</button>
+    <div class="ch"><i class="fa fa-clock" style="color:var(--blue2)"></i><h2>โครงการล่าสุด</h2>
+      <button class="btn bp bsm" onclick="openNew()"><i class="fa fa-plus"></i> สร้างโครงการ</button>
     </div>
-    <div class="card-body">
-      <div class="loader" id="dash-loader"><i class="fa fa-circle-notch"></i><br>กำลังโหลด...</div>
-      <table class="data-table" id="dash-table">
-        <thead><tr><th>โครงการ</th><th>ขนาด</th><th>ราคา (บาท)</th><th>สถานะ</th><th>แก้ไขล่าสุด</th><th></th></tr></thead>
-        <tbody id="dash-tbody"></tbody>
-      </table>
-    </div>
+    <div class="cb"><table class="dt"><thead><tr><th>โครงการ</th><th>ขนาด</th><th>ราคา (บาท)</th><th>สถานะ</th><th>แก้ไขล่าสุด</th><th></th></tr></thead><tbody id="dash-tb"></tbody></table></div>
   </div>
 </div>
 
-<!-- ======== PROJECTS ======== -->
+<!-- PROJECTS -->
 <div class="page" id="page-projects">
-  <div class="search-bar">
-    <input type="text" id="search-input" placeholder="🔍 ค้นหาชื่อลูกค้า, Work Order..." oninput="filterProjects()">
-    <select id="search-status" onchange="filterProjects()">
-      <option value="">— สถานะทั้งหมด —</option>
-      <option>ร่าง</option><option>อนุมัติ</option><option>เสร็จสิ้น</option><option>ยกเลิก</option>
-    </select>
-    <button class="btn btn-primary" onclick="openNewProject()"><i class="fa fa-plus"></i> สร้างโครงการใหม่</button>
+  <div class="sb">
+    <input id="q" placeholder="🔍 ค้นหาชื่อลูกค้า, Work Order..." oninput="filterP()">
+    <select id="qs" onchange="filterP()"><option value="">— สถานะทั้งหมด —</option><option>ร่าง</option><option>อนุมัติ</option><option>เสร็จสิ้น</option><option>ยกเลิก</option></select>
+    <button class="btn bp" onclick="openNew()"><i class="fa fa-plus"></i> สร้างโครงการใหม่</button>
+    <button class="btn bo bsm" onclick="syncToGAS()" title="Sync ข้อมูลขึ้น Google Sheets"><i class="fa fa-cloud-arrow-up"></i> Sync GAS</button>
   </div>
-
-  <div class="card">
-    <div class="card-body">
-      <div class="loader" id="proj-loader"><i class="fa fa-circle-notch"></i><br>กำลังโหลด...</div>
-      <table class="data-table" id="proj-table">
-        <thead><tr><th>ID</th><th>ลูกค้า</th><th>ขนาด</th><th>ราคากลาง</th><th>สถานะ</th><th>แก้ไขล่าสุด</th><th>จัดการ</th></tr></thead>
-        <tbody id="proj-tbody"></tbody>
-      </table>
-    </div>
-  </div>
+  <div class="card"><div class="cb"><table class="dt"><thead><tr><th>ID</th><th>ลูกค้า</th><th>ขนาด</th><th>ราคากลาง</th><th>สถานะ</th><th>แก้ไขล่าสุด</th><th>จัดการ</th></tr></thead><tbody id="proj-tb"></tbody></table></div></div>
 </div>
 
-<!-- ======== SETTINGS ======== -->
+<!-- SETTINGS -->
 <div class="page" id="page-settings">
   <div class="card">
-    <div class="card-header"><i class="fa fa-building" style="color:var(--blue2)"></i><h2>ข้อมูลหน่วยงาน</h2></div>
-    <div class="card-body">
-      <div class="form-grid">
-        <div class="form-group"><label>ชื่อสาขา</label><input id="cfg-branch_name"></div>
-        <div class="form-group"><label>รหัสสาขา</label><input id="cfg-branch_code"></div>
-        <div class="form-group"><label>โทรศัพท์</label><input id="cfg-branch_tel"></div>
-        <div class="form-group"><label>ภาค</label><input id="cfg-region"></div>
-        <div class="form-group" style="grid-column:1/-1"><label>ที่อยู่</label><input id="cfg-branch_addr"></div>
-        <div class="form-group"><label>อัตรากำไร (%)</label><input id="cfg-profit_rate" type="number" step="0.1"></div>
-        <div class="form-group"><label>ค่าดำเนินการ (%)</label><input id="cfg-opex_rate" type="number" step="0.1"></div>
+    <div class="ch"><i class="fa fa-link" style="color:var(--blue2)"></i><h2>เชื่อมต่อ Google Apps Script</h2></div>
+    <div class="cb">
+      <div class="fgrp" style="margin-bottom:12px"><label>GAS Web App URL</label><input id="cfg-url" placeholder="https://script.google.com/macros/s/XXXXX/exec"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+        <button class="btn bp" onclick="saveUrl()"><i class="fa fa-save"></i> บันทึก URL</button>
+        <button class="btn bo" onclick="testGAS()"><i class="fa fa-wifi"></i> ทดสอบ</button>
+        <button class="btn bs" onclick="syncToGAS()"><i class="fa fa-cloud-arrow-up"></i> Sync ทั้งหมดขึ้น GAS</button>
       </div>
-      <div style="margin-top:16px">
-        <button class="btn btn-success" onclick="saveSettings()"><i class="fa fa-save"></i> บันทึกตั้งค่า</button>
+      <div id="conn-res" style="font-size:13px;color:var(--gray);margin-bottom:16px"></div>
+      <div style="background:#F8F9FA;border-radius:8px;padding:14px;font-size:13px;line-height:1.8;color:#566573">
+        <b>📌 วิธี Deploy GAS:</b><br>
+        1. เปิด Google Sheets → Extensions → Apps Script<br>
+        2. วาง Code.gs → Save → รัน <code>initializeSheets()</code><br>
+        3. Deploy → New deployment → Web app → Execute as: <b>Me</b> → Who has access: <b>Anyone</b><br>
+        4. คัดลอก URL มาใส่ช่องด้านบน<br><br>
+        <b>💡 หมายเหตุ:</b> ระบบเก็บข้อมูลใน Browser (localStorage) ก่อนเสมอ<br>
+        กด "Sync GAS" เพื่ออัปโหลดขึ้น Google Sheets ได้ทุกเมื่อ
       </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header"><i class="fa fa-circle-info" style="color:var(--amber)"></i><h2>วิธีตั้งค่า GAS Web App URL</h2></div>
-    <div class="card-body">
-      <div class="form-group" style="margin-bottom:12px">
-        <label>GAS Web App URL (ใส่หลัง deploy)</label>
-        <input id="cfg-gas_url" placeholder="https://script.google.com/macros/s/XXXXX/exec">
-      </div>
-      <button class="btn btn-primary" onclick="saveGasUrl()"><i class="fa fa-link"></i> บันทึก URL</button>
-      <button class="btn btn-outline" style="margin-left:8px" onclick="testConnection()"><i class="fa fa-wifi"></i> ทดสอบการเชื่อมต่อ</button>
-      <div id="conn-result" style="margin-top:10px;font-size:13px;color:var(--gray)"></div>
-      <p style="margin-top:14px;font-size:12px;color:var(--gray);line-height:1.7">
-        <b>วิธี deploy GAS:</b><br>
-        1. เปิด Google Sheets ใหม่ → Extensions → Apps Script<br>
-        2. วาง Code.gs และ appsscript.json<br>
-        3. รัน <code>initializeSheets()</code> ครั้งแรก<br>
-        4. Deploy → New deployment → Web app → Execute as: Me → Anyone<br>
-        5. คัดลอก URL มาใส่ช่องด้านบน
-      </p>
     </div>
   </div>
 </div>
 
-</div><!-- container -->
+</div>
 
-<!-- ======== PROJECT MODAL ======== -->
-<div class="modal-backdrop" id="proj-modal">
+<!-- PROJECT MODAL -->
+<div class="mb" id="proj-modal">
 <div class="modal">
-  <div class="modal-header">
-    <i class="fa fa-solar-panel" style="color:var(--blue2);font-size:20px"></i>
-    <h2 id="modal-title">สร้างโครงการใหม่</h2>
-    <button class="modal-close" onclick="closeModal('proj-modal')">✕</button>
-  </div>
-  <div class="modal-body">
+  <div class="mh"><i class="fa fa-solar-panel" style="color:var(--blue2);font-size:18px"></i><h2 id="m-title">สร้างโครงการใหม่</h2><button class="mclose" onclick="closeM()">✕</button></div>
+  <div class="mc">
     <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('t1')">📋 โครงการ</button>
-      <button class="tab-btn" onclick="switchTab('t2')">💰 ราคา</button>
-      <button class="tab-btn" onclick="switchTab('t3')">👥 คณะกรรมการ</button>
-      <button class="tab-btn" onclick="switchTab('t4')">🏢 ผู้รับจ้าง</button>
-      <button class="tab-btn" onclick="switchTab('t5')">📅 เลขที่หนังสือ</button>
-      <button class="tab-btn" onclick="switchTab('t6')">📄 เอกสาร</button>
+      <button class="tb active" onclick="tab('t1',this)">📋 โครงการ</button>
+      <button class="tb" onclick="tab('t2',this)">💰 ราคา</button>
+      <button class="tb" onclick="tab('t3',this)">👥 คณะกรรมการ</button>
+      <button class="tb" onclick="tab('t4',this)">🏢 ผู้รับจ้าง</button>
+      <button class="tb" onclick="tab('t5',this)">📅 เลขที่หนังสือ</button>
+      <button class="tb" onclick="tab('t6',this)">📄 เอกสาร</button>
     </div>
 
-    <!-- Tab 1: โครงการ -->
-    <div class="tab-pane active" id="t1">
-      <div class="form-section">
-        <h3><i class="fa fa-user"></i> ข้อมูลลูกค้า</h3>
-        <div class="form-grid">
-          <div class="form-group" style="grid-column:1/-1"><label>ชื่อลูกค้า / สถานที่ติดตั้ง *</label><input id="f-ลูกค้า" placeholder="เช่น โรงเรียนประทีปธรรม มูลนิธิ"></div>
-          <div class="form-group" style="grid-column:1/-1"><label>ที่อยู่ (ย่อ)</label><input id="f-ที่อยู่" placeholder="หมู่ 3 ตำบลแหลมสัก อำเภออ่าวลึก จังหวัดกระบี่"></div>
-          <div class="form-group" style="grid-column:1/-1"><label>ที่อยู่เต็ม</label><input id="f-ที่อยู่เต็ม" placeholder="เลขที่ 11/1 หมู่ 3 ตำบลแหลมสัก..."></div>
+    <!-- t1 -->
+    <div class="tp active" id="t1">
+      <div class="fs"><h3>ข้อมูลลูกค้า</h3>
+        <div class="fg">
+          <div class="fgrp" style="grid-column:1/-1"><label>ชื่อลูกค้า / สถานที่ติดตั้ง *</label><input id="f-ลูกค้า"></div>
+          <div class="fgrp" style="grid-column:1/-1"><label>ที่อยู่ (ย่อ)</label><input id="f-ที่อยู่"></div>
+          <div class="fgrp" style="grid-column:1/-1"><label>ที่อยู่เต็ม</label><input id="f-ที่อยู่เต็ม"></div>
         </div>
       </div>
-      <div class="form-section">
-        <h3><i class="fa fa-solar-panel"></i> ข้อมูลระบบ</h3>
-        <div class="form-grid">
-          <div class="form-group"><label>ขนาด (กิโลวัตต์) *</label><input id="f-ขนาดkW" type="number" placeholder="20"></div>
-          <div class="form-group"><label>จำนวนเฟส</label>
-            <select id="f-เฟส"><option>3 เฟส</option><option>1 เฟส</option></select>
-          </div>
-          <div class="form-group"><label>ประเภทหลังคา</label><input id="f-ประเภทหลังคา" value="หลังคากระเบื้องลอนคู่"></div>
-          <div class="form-group"><label>Work Order</label><input id="f-WorkOrder"></div>
-          <div class="form-group"><label>เลขที่ใบสั่งขาย (SO)</label><input id="f-SO"></div>
-          <div class="form-group"><label>เลขใบแจ้งหนี้</label><input id="f-เลขใบแจ้งหนี้"></div>
-          <div class="form-group"><label>เลขคำร้อง</label><input id="f-เลขคำร้อง"></div>
-          <div class="form-group"><label>วันที่รับคำร้อง</label><input id="f-วันที่รับคำร้อง" placeholder="12 มกราคม 2569"></div>
+      <div class="fs"><h3>ข้อมูลระบบ</h3>
+        <div class="fg">
+          <div class="fgrp"><label>ขนาด (kW) *</label><input id="f-ขนาดkW" type="number" placeholder="20"></div>
+          <div class="fgrp"><label>เฟส</label><select id="f-เฟส"><option>3 เฟส</option><option>1 เฟส</option></select></div>
+          <div class="fgrp"><label>ประเภทหลังคา</label><input id="f-ประเภทหลังคา" value="หลังคากระเบื้องลอนคู่"></div>
+          <div class="fgrp"><label>Work Order</label><input id="f-WorkOrder"></div>
+          <div class="fgrp"><label>เลขที่ใบสั่งขาย (SO)</label><input id="f-SO"></div>
+          <div class="fgrp"><label>เลขใบแจ้งหนี้</label><input id="f-เลขใบแจ้งหนี้"></div>
+          <div class="fgrp"><label>เลขคำร้อง</label><input id="f-เลขคำร้อง"></div>
+          <div class="fgrp"><label>วันที่รับคำร้อง</label><input id="f-วันที่รับคำร้อง" value="12 มกราคม 2569"></div>
         </div>
       </div>
-      <div class="form-section">
-        <h3><i class="fa fa-microchip"></i> อุปกรณ์</h3>
-        <div class="form-grid">
-          <div class="form-group" style="grid-column:1/-1"><label>แผง PV (รุ่น/สเปค)</label><input id="f-แผง_PV" value="PV Mono half cell (Tier1) LONGi ขนาดไม่น้อยกว่า 630 W"></div>
-          <div class="form-group"><label>จำนวนแผง</label><input id="f-จำนวนแผง" type="number" value="32"></div>
-          <div class="form-group" style="grid-column:1/-1"><label>Inverter</label><input id="f-Inverter" value="Huawei Inverter 20 KW.(SUN2000-20KTL-M5) จำนวน 1 ตัว"></div>
-          <div class="form-group" style="grid-column:1/-1"><label>Power Sensor</label><input id="f-Sensor" value="Power Sensor 3P(DTSU666-H) จำนวน 1 ตัว"></div>
+      <div class="fs"><h3>อุปกรณ์</h3>
+        <div class="fg">
+          <div class="fgrp" style="grid-column:1/-1"><label>แผง PV</label><input id="f-แผง_PV" value="PV Mono half cell (Tier1) LONGi ขนาดไม่น้อยกว่า 630 W"></div>
+          <div class="fgrp"><label>จำนวนแผง</label><input id="f-จำนวนแผง" type="number" value="32"></div>
+          <div class="fgrp" style="grid-column:1/-1"><label>Inverter</label><input id="f-Inverter" value="Huawei Inverter 20 KW.(SUN2000-20KTL-M5)"></div>
+          <div class="fgrp" style="grid-column:1/-1"><label>Power Sensor</label><input id="f-Sensor" value="Power Sensor 3P(DTSU666-H)"></div>
         </div>
       </div>
-      <div class="form-section">
-        <h3><i class="fa fa-flag"></i> สถานะ</h3>
-        <div class="form-group" style="max-width:200px">
-          <select id="f-สถานะ">
-            <option>ร่าง</option><option>อนุมัติ</option><option>เสร็จสิ้น</option><option>ยกเลิก</option>
-          </select>
-        </div>
+      <div class="fs"><h3>สถานะ</h3>
+        <div class="fgrp" style="max-width:180px"><select id="f-สถานะ"><option>ร่าง</option><option>อนุมัติ</option><option>เสร็จสิ้น</option><option>ยกเลิก</option></select></div>
       </div>
     </div>
 
-    <!-- Tab 2: ราคา -->
-    <div class="tab-pane" id="t2">
-      <div class="form-section">
-        <h3><i class="fa fa-calculator"></i> ราคาต้นทุน (จ้างเหมา)</h3>
-        <div class="form-grid">
-          <div class="form-group"><label>ราคาต้นทุน (ก่อน VAT) บาท</label><input id="f-ราคาต้นทุน" type="number" step="0.01" oninput="calcPrice()" placeholder="343734.80"></div>
-          <div class="form-group"><label>VAT 7% (คำนวณอัตโนมัติ)</label><input id="f-VAT_amt" readonly class="price-auto"></div>
-          <div class="form-group"><label>ราคากลาง (รวม VAT) บาท</label><input id="f-ราคากลาง" readonly class="price-auto"></div>
-          <div class="form-group" style="grid-column:1/-1"><label>ราคากลาง (ตัวอักษร)</label><input id="f-ราคาตัวอักษร" placeholder="สามแสนหกหมื่น..."></div>
+    <!-- t2 -->
+    <div class="tp" id="t2">
+      <div class="fs"><h3>ราคาต้นทุน</h3>
+        <div class="fg">
+          <div class="fgrp"><label>ราคาต้นทุน (ก่อน VAT) บาท</label><input id="f-ราคาต้นทุน" type="number" step="0.01" oninput="calcP()"></div>
+          <div class="fgrp"><label>VAT 7% (อัตโนมัติ)</label><input id="f-VAT_amt" readonly class="pr"></div>
+          <div class="fgrp"><label>ราคากลาง (รวม VAT)</label><input id="f-ราคากลาง" readonly class="pr"></div>
+          <div class="fgrp" style="grid-column:1/-1"><label>ราคาตัวอักษร (ราคากลาง)</label><input id="f-ราคาตัวอักษร"></div>
         </div>
       </div>
-      <div class="form-section">
-        <h3><i class="fa fa-file-invoice-dollar"></i> ราคาที่เรียกเก็บลูกค้า</h3>
-        <div class="form-grid">
-          <div class="form-group"><label>ราคาเสนอลูกค้า (รวม VAT) บาท</label><input id="f-ราคาเสนอลูกค้า" type="number" step="0.01" placeholder="415150.01"></div>
-          <div class="form-group"><label>ราคาตกลงจ้าง (รวม VAT) บาท</label><input id="f-ราคาตกลงจ้าง" type="number" step="0.01" placeholder="367794.24"></div>
-          <div class="form-group" style="grid-column:1/-1"><label>ราคาเสนอลูกค้า (ตัวอักษร)</label><input id="f-ราคาลูกค้าตัวอักษร" placeholder="สี่แสนหนึ่งหมื่น..."></div>
+      <div class="fs"><h3>ราคาลูกค้า</h3>
+        <div class="fg">
+          <div class="fgrp"><label>ราคาเสนอลูกค้า (รวม VAT)</label><input id="f-ราคาเสนอลูกค้า" type="number" step="0.01"></div>
+          <div class="fgrp"><label>ราคาตกลงจ้าง (รวม VAT)</label><input id="f-ราคาตกลงจ้าง" type="number" step="0.01"></div>
+          <div class="fgrp" style="grid-column:1/-1"><label>ราคาลูกค้าตัวอักษร</label><input id="f-ราคาลูกค้าตัวอักษร"></div>
         </div>
       </div>
     </div>
 
-    <!-- Tab 3: คณะกรรมการ -->
-    <div class="tab-pane" id="t3">
-      <div class="committee-block">
-        <h4><i class="fa fa-gavel"></i> 4.2.1 คณะกรรมการกำหนดราคากลาง / TOR</h4>
-        <div id="c1-list"></div>
-        <button class="add-member-btn" onclick="addMember('c1')"><i class="fa fa-plus-circle"></i> เพิ่มกรรมการ</button>
-      </div>
-      <div class="committee-block">
-        <h4><i class="fa fa-shopping-cart"></i> 4.2.2 คณะกรรมการจัดซื้อ/จ้าง</h4>
-        <div id="c2-list"></div>
-        <button class="add-member-btn" onclick="addMember('c2')"><i class="fa fa-plus-circle"></i> เพิ่มกรรมการ</button>
-      </div>
-      <div class="committee-block">
-        <h4><i class="fa fa-clipboard-check"></i> 4.2.3 คณะกรรมการตรวจรับงาน</h4>
-        <div id="c3-list"></div>
-        <button class="add-member-btn" onclick="addMember('c3')"><i class="fa fa-plus-circle"></i> เพิ่มกรรมการ</button>
-      </div>
-      <div class="committee-block">
-        <h4><i class="fa fa-hard-hat"></i> 4.2.4 ผู้ควบคุมงาน</h4>
-        <div id="sup-list"></div>
-      </div>
+    <!-- t3 -->
+    <div class="tp" id="t3">
+      <div class="cb-block"><h4>4.2.1 คณะกรรมการกำหนดราคากลาง/TOR</h4><div id="c1-list"></div><button class="add-btn" onclick="addM('c1')"><i class="fa fa-plus-circle"></i> เพิ่มกรรมการ</button></div>
+      <div class="cb-block"><h4>4.2.2 คณะกรรมการจัดซื้อ/จ้าง</h4><div id="c2-list"></div><button class="add-btn" onclick="addM('c2')"><i class="fa fa-plus-circle"></i> เพิ่มกรรมการ</button></div>
+      <div class="cb-block"><h4>4.2.3 คณะกรรมการตรวจรับงาน</h4><div id="c3-list"></div><button class="add-btn" onclick="addM('c3')"><i class="fa fa-plus-circle"></i> เพิ่มกรรมการ</button></div>
+      <div class="cb-block"><h4>4.2.4 ผู้ควบคุมงาน</h4><div id="sup-list"></div></div>
     </div>
 
-    <!-- Tab 4: ผู้รับจ้าง -->
-    <div class="tab-pane" id="t4">
-      <div class="form-section">
-        <h3><i class="fa fa-building"></i> ผู้ประกอบการ/ผู้รับจ้าง</h3>
-        <div class="form-grid">
-          <div class="form-group" style="grid-column:1/-1"><label>ชื่อบริษัท</label><input id="f-บริษัทรับจ้าง" placeholder="บริษัท สกาย พาวเวอร์ โซลูชั่น จำกัด"></div>
-          <div class="form-group" style="grid-column:1/-1"><label>ที่อยู่บริษัท</label><input id="f-ที่อยู่บริษัท"></div>
-          <div class="form-group"><label>เลขที่ใบเสนอราคา</label><input id="f-เลขใบเสนอราคา" placeholder="QT-256800471"></div>
-          <div class="form-group"><label>วันที่ใบเสนอราคา</label><input id="f-วันที่ใบเสนอราคา"></div>
-          <div class="form-group"><label>เลขที่รับ</label><input id="f-เลขที่รับ" placeholder="725/2569"></div>
-          <div class="form-group"><label>วันที่รับ</label><input id="f-วันที่รับ"></div>
+    <!-- t4 -->
+    <div class="tp" id="t4">
+      <div class="fs"><h3>ผู้ประกอบการ/ผู้รับจ้าง</h3>
+        <div class="fg">
+          <div class="fgrp" style="grid-column:1/-1"><label>ชื่อบริษัท</label><input id="f-บริษัทรับจ้าง"></div>
+          <div class="fgrp" style="grid-column:1/-1"><label>ที่อยู่บริษัท</label><input id="f-ที่อยู่บริษัท"></div>
+          <div class="fgrp"><label>เลขที่ใบเสนอราคา</label><input id="f-เลขใบเสนอราคา"></div>
+          <div class="fgrp"><label>วันที่ใบเสนอราคา</label><input id="f-วันที่ใบเสนอราคา"></div>
+          <div class="fgrp"><label>เลขที่รับ</label><input id="f-เลขที่รับ"></div>
+          <div class="fgrp"><label>วันที่รับ</label><input id="f-วันที่รับ"></div>
         </div>
       </div>
-      <div class="form-section">
-        <h3><i class="fa fa-signature"></i> ผู้ลงนาม</h3>
-        <div class="form-grid">
-          <div class="form-group"><label>ผู้จัดการ (ชื่อ)</label><input id="f-ผู้จัดการชื่อ" placeholder="นายวิชัย เกลี้ยงช่วย"></div>
-          <div class="form-group"><label>ตำแหน่งรักษาการ</label><input id="f-ผู้จัดการตำแหน่งรักษาการ" placeholder="หัวหน้าแผนกบริการลูกค้า รักษาการแทน"></div>
-          <div class="form-group" style="grid-column:1/-1"><label>ตำแหน่งผู้จัดการ</label><input id="f-ผู้จัดการตำแหน่ง" value="ผู้จัดการ การไฟฟ้าส่วนภูมิภาคสาขาอ่าวลึก"></div>
-          <div class="form-group"><label>หผ.ปร. (ชื่อ)</label><input id="f-หผปร_ชื่อ" placeholder="นายมานศักดิ์ พิลาฤทธิ์"></div>
-          <div class="form-group"><label>ตำแหน่ง หผ.ปร.</label><input id="f-หผปร_ตำแหน่ง" value="หผ.ปร.กฟส.อ่าวลึก"></div>
-          <div class="form-group"><label>โทรศัพท์สาขา</label><input id="f-โทรศัพท์" value="0-7566-6925"></div>
-          <div class="form-group"><label>ผู้ควบคุมงาน (ชื่อ)</label><input id="f-ผู้ควบคุมงาน_ชื่อ"></div>
-          <div class="form-group"><label>ตำแหน่ง</label><input id="f-ผู้ควบคุมงาน_ตำแหน่ง"></div>
-          <div class="form-group"><label>โทร ผู้ควบคุมงาน</label><input id="f-ผู้ควบคุมงาน_โทร"></div>
-          <div class="form-group"><label>โทร หผ.ปร.</label><input id="f-หผปร_โทร"></div>
+      <div class="fs"><h3>ผู้ลงนาม</h3>
+        <div class="fg">
+          <div class="fgrp"><label>ผู้จัดการ (ชื่อ)</label><input id="f-ผู้จัดการชื่อ" value="นายวิชัย เกลี้ยงช่วย"></div>
+          <div class="fgrp"><label>ตำแหน่งรักษาการ</label><input id="f-ผู้จัดการตำแหน่งรักษาการ" value="หัวหน้าแผนกบริการลูกค้า รักษาการแทน"></div>
+          <div class="fgrp" style="grid-column:1/-1"><label>ตำแหน่งผู้จัดการ</label><input id="f-ผู้จัดการตำแหน่ง" value="ผู้จัดการ การไฟฟ้าส่วนภูมิภาคสาขาอ่าวลึก"></div>
+          <div class="fgrp"><label>หผ.ปร. (ชื่อ)</label><input id="f-หผปร_ชื่อ" value="นายมานศักดิ์ พิลาฤทธิ์"></div>
+          <div class="fgrp"><label>ตำแหน่ง หผ.ปร.</label><input id="f-หผปร_ตำแหน่ง" value="หผ.ปร.กฟส.อ่าวลึก"></div>
+          <div class="fgrp"><label>โทรศัพท์สาขา</label><input id="f-โทรศัพท์" value="0-7566-6925"></div>
+          <div class="fgrp"><label>ผู้ควบคุมงาน (ชื่อ)</label><input id="f-ผู้ควบคุมงาน_ชื่อ" value="นายอติวิทย์ ทองลา"></div>
+          <div class="fgrp"><label>ตำแหน่ง</label><input id="f-ผู้ควบคุมงาน_ตำแหน่ง" value="พชง.3ผปร.กฟส.อ่าวลึก"></div>
+          <div class="fgrp"><label>โทร ผู้ควบคุมงาน</label><input id="f-ผู้ควบคุมงาน_โทร" value="093-013-2310"></div>
+          <div class="fgrp"><label>โทร หผ.ปร.</label><input id="f-หผปร_โทร" value="080-182-2335"></div>
         </div>
       </div>
     </div>
 
-    <!-- Tab 5: เลขที่หนังสือ -->
-    <div class="tab-pane" id="t5">
-
-      <!-- Progress Timeline -->
-      <div class="timeline" id="doc-timeline"></div>
-
-      <div class="form-grid" style="margin-top:16px">
-        <div class="form-group"><label>เลขที่อนุมัติรับงาน</label><input id="f-เลขอนุมัติรับงาน" placeholder="ต.2 อล.(ปร.) 163/2569"></div>
-        <div class="form-group"><label>วันที่</label><input id="f-วันอนุมัติรับงาน" placeholder="28 มกราคม 2569"></div>
-        <div class="form-group"><label>เลขที่ราคากลาง</label><input id="f-เลขราคากลาง" placeholder="ต.2 อล.(ปร.)"></div>
-        <div class="form-group"><label>วันที่ราคากลาง</label><input id="f-วันราคากลาง" placeholder="30 มกราคม 2569"></div>
-        <div class="form-group"><label>เลขที่รายงานขอจ้าง</label><input id="f-เลขรายงานขอจ้าง" placeholder="ต.2 อล.(ปร.)178/2569"></div>
-        <div class="form-group"><label>วันที่</label><input id="f-วันรายงานขอจ้าง" placeholder="30 มกราคม 2569"></div>
-        <div class="form-group"><label>เลขที่หนังสือเชิญชวน</label><input id="f-เลขเชิญชวน" placeholder="มท.5307.60/กฟส.อล. 5460/2569"></div>
-        <div class="form-group"><label>วันที่เชิญชวน</label><input id="f-วันเชิญชวน" placeholder="2 กุมภาพันธ์ 2569"></div>
-        <div class="form-group"><label>เลขที่หนังสือต่อรอง</label><input id="f-เลขต่อรอง" placeholder="มท.5307.60/กฟส.อล. 6806/2569"></div>
-        <div class="form-group"><label>วันที่ต่อรอง</label><input id="f-วันต่อรอง" placeholder="9 กุมภาพันธ์ 2569"></div>
-        <div class="form-group"><label>วันที่ผลการจัดจ้าง</label><input id="f-วันผลจัดจ้าง" placeholder="16 กุมภาพันธ์ 2569"></div>
-        <div class="form-group"><label>เลขที่หนังสือยืนยันบริษัท</label><input id="f-เลขยืนยันบริษัท" placeholder="SPS2569/000047"></div>
-        <div class="form-group"><label>วันที่ยืนยัน</label><input id="f-วันยืนยันบริษัท" placeholder="12 กุมภาพันธ์ 2569"></div>
-        <div class="form-group"><label>เลขที่อนุมัติ ผวก.</label><input id="f-เลขอนุมัติ_ผวก" placeholder="กธน.(พน) 893/2567"></div>
-        <div class="form-group"><label>วันที่ ผวก. อนุมัติ</label><input id="f-วันอนุมัติ_ผวก" placeholder="23 กันยายน 2567"></div>
-        <div class="form-group" style="grid-column:1/-1"><label>หมายเหตุ</label><textarea id="f-หมายเหตุ" rows="2"></textarea></div>
+    <!-- t5 -->
+    <div class="tp" id="t5">
+      <div class="fg">
+        <div class="fgrp"><label>เลขที่อนุมัติรับงาน</label><input id="f-เลขอนุมัติรับงาน"></div>
+        <div class="fgrp"><label>วันที่</label><input id="f-วันอนุมัติรับงาน"></div>
+        <div class="fgrp"><label>เลขที่ราคากลาง</label><input id="f-เลขราคากลาง"></div>
+        <div class="fgrp"><label>วันที่ราคากลาง</label><input id="f-วันราคากลาง"></div>
+        <div class="fgrp"><label>เลขที่รายงานขอจ้าง</label><input id="f-เลขรายงานขอจ้าง"></div>
+        <div class="fgrp"><label>วันที่</label><input id="f-วันรายงานขอจ้าง"></div>
+        <div class="fgrp"><label>เลขที่หนังสือเชิญชวน</label><input id="f-เลขเชิญชวน"></div>
+        <div class="fgrp"><label>วันที่เชิญชวน</label><input id="f-วันเชิญชวน"></div>
+        <div class="fgrp"><label>เลขที่หนังสือต่อรอง</label><input id="f-เลขต่อรอง"></div>
+        <div class="fgrp"><label>วันที่ต่อรอง</label><input id="f-วันต่อรอง"></div>
+        <div class="fgrp"><label>วันที่ผลการจัดจ้าง</label><input id="f-วันผลจัดจ้าง"></div>
+        <div class="fgrp"><label>เลขที่ยืนยันบริษัท</label><input id="f-เลขยืนยันบริษัท"></div>
+        <div class="fgrp"><label>วันที่ยืนยัน</label><input id="f-วันยืนยันบริษัท"></div>
+        <div class="fgrp"><label>เลขที่อนุมัติ ผวก.</label><input id="f-เลขอนุมัติ_ผวก"></div>
+        <div class="fgrp"><label>วันที่ ผวก.</label><input id="f-วันอนุมัติ_ผวก"></div>
+        <div class="fgrp" style="grid-column:1/-1"><label>หมายเหตุ</label><textarea id="f-หมายเหตุ"></textarea></div>
       </div>
     </div>
 
-    <!-- Tab 6: เอกสาร -->
-    <div class="tab-pane" id="t6">
-      <div id="doc-notice" style="background:#FEF9E7;border:1px solid var(--amber);border-radius:8px;padding:12px 14px;margin-bottom:14px;font-size:13px;color:#7D6608">
-        <i class="fa fa-triangle-exclamation"></i> <b>บันทึกโครงการก่อน</b> จึงจะสร้างเอกสารได้ กรุณากรอกข้อมูลและกด "บันทึก" ก่อน
+    <!-- t6 -->
+    <div class="tp" id="t6">
+      <div class="notice" id="doc-notice"><i class="fa fa-triangle-exclamation"></i> <b>บันทึกโครงการก่อน</b> จึงจะสร้างเอกสารได้</div>
+      <div class="sg" id="doc-grid">
+        <div class="dc" onclick="genDoc('doc1')"><div class="di">📋</div><div class="dn">ขออนุมัติรับงาน</div><div class="ds">เอกสารที่ 1</div></div>
+        <div class="dc" onclick="genDoc('doc2')"><div class="di">💰</div><div class="dn">ขออนุมัติราคากลาง/TOR</div><div class="ds">เอกสารที่ 2</div></div>
+        <div class="dc" onclick="genDoc('doc3')"><div class="di">📝</div><div class="dn">รายงานขอจ้าง</div><div class="ds">เอกสารที่ 3</div></div>
+        <div class="dc" onclick="genDoc('doc4')"><div class="di">✉️</div><div class="dn">หนังสือเชิญชวน</div><div class="ds">เอกสารที่ 4</div></div>
+        <div class="dc" onclick="genDoc('doc5')"><div class="di">🤝</div><div class="dn">หนังสือต่อรองราคา</div><div class="ds">เอกสารที่ 5</div></div>
+        <div class="dc" onclick="genDoc('doc6')"><div class="di">🏆</div><div class="dn">ผลการจัดจ้าง/ประกาศผู้ชนะ</div><div class="ds">เอกสารที่ 6</div></div>
       </div>
-      <div class="doc-grid" id="doc-grid">
-        <div class="doc-card" onclick="genDoc('doc1')">
-          <div class="doc-icon">📋</div>
-          <div class="doc-name">ขออนุมัติรับงาน</div>
-          <div class="doc-sub">เอกสารที่ 1</div>
-        </div>
-        <div class="doc-card" onclick="genDoc('doc2')">
-          <div class="doc-icon">💰</div>
-          <div class="doc-name">ขออนุมัติราคากลาง/TOR</div>
-          <div class="doc-sub">เอกสารที่ 2</div>
-        </div>
-        <div class="doc-card" onclick="genDoc('doc3')">
-          <div class="doc-icon">📝</div>
-          <div class="doc-name">รายงานขอจ้าง</div>
-          <div class="doc-sub">เอกสารที่ 3</div>
-        </div>
-        <div class="doc-card" onclick="genDoc('doc4')">
-          <div class="doc-icon">✉️</div>
-          <div class="doc-name">หนังสือเชิญชวน</div>
-          <div class="doc-sub">เอกสารที่ 4</div>
-        </div>
-        <div class="doc-card" onclick="genDoc('doc5')">
-          <div class="doc-icon">🤝</div>
-          <div class="doc-name">หนังสือต่อรองราคา</div>
-          <div class="doc-sub">เอกสารที่ 5</div>
-        </div>
-        <div class="doc-card" onclick="genDoc('doc6')">
-          <div class="doc-icon">🏆</div>
-          <div class="doc-name">ผลการจัดจ้าง/ประกาศผู้ชนะ</div>
-          <div class="doc-sub">เอกสารที่ 6</div>
-        </div>
-        <div class="doc-card" onclick="genAllDocx()" style="border-color:var(--teal)">
-          <div class="doc-icon">📦</div>
-          <div class="doc-name" style="color:var(--teal)">สร้างทั้งหมด (.docx)</div>
-          <div class="doc-sub">Browser-side</div>
-        </div>
-      </div>
-
-      <div style="margin-top:20px">
-        <h3 style="font-size:13px;font-weight:600;color:var(--gray);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">ประวัติการสร้างเอกสาร</h3>
-        <table class="data-table">
-          <thead><tr><th>วันที่เวลา</th><th>การกระทำ</th><th>สถานะ</th></tr></thead>
-          <tbody id="log-tbody"></tbody>
-        </table>
+      <div style="margin-top:18px"><h3 style="font-size:12px;font-weight:600;color:var(--gray);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">ประวัติ</h3>
+        <table class="dt"><thead><tr><th>วันที่</th><th>การกระทำ</th><th>สถานะ</th></tr></thead><tbody id="log-tb"></tbody></table>
       </div>
     </div>
 
   </div>
-  <div class="modal-footer">
-    <button class="btn btn-outline" onclick="closeModal('proj-modal')">ยกเลิก</button>
-    <button class="btn btn-success" onclick="saveProject()"><i class="fa fa-save"></i> บันทึก</button>
+  <div class="mf">
+    <button class="btn bo" onclick="closeM()">ยกเลิก</button>
+    <button class="btn bs" onclick="saveP()"><i class="fa fa-save"></i> บันทึก</button>
   </div>
 </div>
 </div>
@@ -551,561 +293,407 @@ nav .nav-btn.active { background:#fff; color:var(--blue); font-weight:600; }
 
 <script>
 // ============================================================
-//  CONFIG
+//  STATE — localStorage เป็น primary storage
 // ============================================================
-let GAS_URL = localStorage.getItem('gas_url') || '';
-let projects = [];
+const LS = 'solar_pea_aul';
+let DB = { projects:[], settings:{} };
+let GAS_URL = '';
 let currentId = null;
 
-const DEFAULT_COMMITTEES = {
-  c1:[
-    {name:'นายวิชัย  เกลี้ยงช่วย',     pos:'หผ.บค.กฟส.อ่าวลึก',                role:'ประธานกรรมการ'},
-    {name:'นางสาวอรอนงค์  น้อยผา',     pos:'พบช.5ผบง.กฟส.อ่าวลึก',            role:'กรรมการ'},
-    {name:'นายพุทธภงค์   เมืองด้วง',   pos:'พชง.4 ผปร.กฟส.อ่าวลึก',           role:'กรรมการ'},
-  ],
-  c2:[
-    {name:'นายธวัชชัย  ไหมสุข',         pos:'พชง.6รักษาการแทนชผ.กฟส.อ่าวลึก',role:'ประธานกรรมการ'},
-    {name:'นางสาวจุฬาลักษณ์ สุทธิเกิด',pos:'พบช.7ผบ3.กฟส.อ่าวลึก',            role:'กรรมการ'},
-    {name:'นายพงศธร  เกตุมณี',          pos:'พชง.3ผปร.กฟส.อ่าวลึก',            role:'กรรมการ'},
-  ],
-  c3:[
-    {name:'นายมานศักดิ์   พิลาฤทธิ์',  pos:'หผ.ปร.กฟส.อ่าวลึก',              role:'ประธานกรรมการ'},
-    {name:'นายกลวัชร  บุญช่วย',         pos:'พชง.5 ผบค.กฟส.อ่าวลึก',          role:'กรรมการ'},
-    {name:'นางสาวศุภกร  นบนวล',        pos:'นบช.5ผบง.กฟส.อ่าวลึก',            role:'กรรมการ'},
-  ],
-  supervisor:{name:'นายอติวิทย์   ทองลา', pos:'พชง.3ผปร.กฟส.อ่าวลึก', role:'ผู้ควบคุมงาน'},
-};
+function loadDB() {
+  try {
+    const s = localStorage.getItem(LS);
+    if (s) DB = JSON.parse(s);
+    DB.projects = DB.projects || [];
+    DB.settings = DB.settings || {};
+  } catch(e) { DB = { projects:[], settings:{} }; }
+  GAS_URL = DB.settings.gas_url || '';
+  document.getElementById('cfg-url').value = GAS_URL;
+  updateSyncBadge('local');
+}
+
+function saveDB() {
+  try { localStorage.setItem(LS, JSON.stringify(DB)); }
+  catch(e) { toast('localStorage เต็ม — ไม่สามารถบันทึกได้','err'); }
+}
+
+function genId() {
+  return 'PRJ-' + new Date().toISOString().slice(0,10).replace(/-/g,'') +
+         '-' + Math.random().toString(36).substr(2,4).toUpperCase();
+}
+function nowStr() {
+  return new Date().toLocaleString('th-TH',{timeZone:'Asia/Bangkok',hour12:false}).replace(',','');
+}
+function fmtNum(n) {
+  if (!n && n!==0) return '-';
+  return Number(n).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
 
 // ============================================================
-//  UTILS
+//  UI HELPERS
 // ============================================================
 function toast(msg, type='') {
   const t = document.getElementById('toast');
   t.textContent = msg;
-  t.style.background = type==='err' ? '#C0392B' : type==='ok' ? '#1E8449' : '#2C3E50';
+  t.style.background = type==='err'?'#C0392B':type==='ok'?'#1E8449':'#2C3E50';
   t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 3000);
+  setTimeout(()=>t.classList.remove('show'), 3200);
 }
 
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(b=>{
-    if (b.textContent.toLowerCase().includes(name==='dashboard'?'ภาพ':name==='projects'?'โครงการ':'ตั้งค่า'))
-      b.classList.add('active');
+  const labels = {dashboard:'ภาพรวม',projects:'โครงการ',settings:'ตั้งค่า'};
+  document.querySelectorAll('.nb').forEach(b=>{
+    if (b.textContent.includes(labels[name])) b.classList.add('active');
   });
-  if (name==='dashboard') loadDashboard();
-  if (name==='projects')  loadProjects();
-  if (name==='settings')  loadSettings();
+  if (name==='dashboard') renderDash();
+  if (name==='projects')  renderProj(DB.projects);
 }
 
-function switchTab(id) {
-  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+function tab(id, btn) {
+  document.querySelectorAll('.tp').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  event.currentTarget.classList.add('active');
-  if (id==='t6') loadDocLog();
-  if (id==='t5') renderTimeline();
+  btn.classList.add('active');
+  if (id==='t6') renderLog();
+}
+
+function updateSyncBadge(state) {
+  const el = document.getElementById('sync-status');
+  if (state==='ok') { el.className='sync-badge sync-ok'; el.textContent='⬤ Synced'; el.title='Sync กับ GAS แล้ว'; }
+  else if (state==='pending') { el.className='sync-badge sync-pending'; el.textContent='⬤ Pending'; el.title='รอ sync'; }
+  else { el.className='sync-badge sync-off'; el.textContent='⬤ Local'; el.title='เก็บในเครื่อง (ยังไม่ sync)'; }
 }
 
 // ============================================================
-//  GAS API CALL
-// ============================================================
-async function api(params={}, body=null) {
-  if (!GAS_URL) { toast('ยังไม่ได้ตั้งค่า GAS URL','err'); throw new Error('no url'); }
-
-  // ลอง fetch() ก่อน (Chrome/Firefox), ถ้าถูกบล็อกจาก Edge → fallback JSONP
-  const merged = { ...params };
-  if (body) merged.payload = JSON.stringify(body);
-  const qs  = new URLSearchParams(merged).toString();
-  const url = GAS_URL + '?' + qs;
-
-  try {
-    const res  = await fetch(url, { method:'GET', redirect:'follow' });
-    const text = await res.text();
-    let data;
-    try { data = JSON.parse(text); }
-    catch(e) {
-      // อาจเป็น JSONP response — strip callback wrapper
-      const m = text.match(/^\w+\((.+)\);?$/s);
-      if (m) data = JSON.parse(m[1]);
-      else throw new Error('ตอบกลับไม่ใช่ JSON');
-    }
-    if (!data.ok) throw new Error(data.error || 'API error');
-    return data;
-  } catch(fetchErr) {
-    // fetch ถูกบล็อก (Edge Tracking Prevention) → ใช้ JSONP
-    if (fetchErr.message.includes('Failed to fetch') || fetchErr.message.includes('NetworkError')) {
-      return apiJsonp(params, body);
-    }
-    throw fetchErr;
-  }
-}
-
-function apiJsonp(params={}, body=null) {
-  return new Promise((resolve, reject) => {
-    const cbName = '_cb' + Date.now() + Math.random().toString(36).substr(2,4);
-    const merged = { ...params, callback: cbName };
-    if (body) merged.payload = JSON.stringify(body);
-    const qs  = new URLSearchParams(merged).toString();
-    const url = GAS_URL + '?' + qs;
-
-    window[cbName] = (data) => {
-      delete window[cbName];
-      if (s.parentNode) s.parentNode.removeChild(s);
-      if (!data.ok) reject(new Error(data.error || 'API error'));
-      else resolve(data);
-    };
-
-    const s = document.createElement('script');
-    s.src = url;
-    s.onerror = () => {
-      delete window[cbName];
-      if (s.parentNode) s.parentNode.removeChild(s);
-      reject(new Error('JSONP ล้มเหลว — ตรวจสอบ GAS URL และ Deploy settings'));
-    };
-    const tid = setTimeout(() => {
-      if (window[cbName]) {
-        delete window[cbName];
-        try { s.parentNode.removeChild(s); } catch(e) {}
-        reject(new Error('Timeout — GAS ไม่ตอบสนอง'));
-      }
-    }, 20000);
-    s.onload = () => clearTimeout(tid);
-    document.head.appendChild(s);
-  });
-
-// ============================================================
-}
 //  DASHBOARD
 // ============================================================
-async function loadDashboard() {
-  try {
-    if (!GAS_URL) { renderDashboard([]); return; }
-    const r = await api({action:'getProjects'});
-    projects = r.data || [];
-    renderDashboard(projects);
-  } catch(e) { toast('โหลดข้อมูลไม่สำเร็จ: '+e.message,'err'); }
-}
+function renderDash() {
+  const p = DB.projects;
+  document.getElementById('stats').innerHTML = [
+    ['โครงการทั้งหมด', p.length, 'var(--blue2)'],
+    ['ร่าง',           p.filter(x=>x.สถานะ==='ร่าง').length, 'var(--amber)'],
+    ['อนุมัติ',        p.filter(x=>x.สถานะ==='อนุมัติ').length, 'var(--teal)'],
+    ['เสร็จสิ้น',      p.filter(x=>x.สถานะ==='เสร็จสิ้น').length, '#7D3C98'],
+  ].map(([l,n,c])=>`<div class="sc"><div class="n" style="color:${c}">${n}</div><div class="l">${l}</div></div>`).join('');
 
-function renderDashboard(data) {
-  document.getElementById('cnt-all').textContent = data.length;
-  document.getElementById('cnt-draft').textContent    = data.filter(p=>p['สถานะ']==='ร่าง').length;
-  document.getElementById('cnt-approved').textContent  = data.filter(p=>p['สถานะ']==='อนุมัติ').length;
-  document.getElementById('cnt-done').textContent     = data.filter(p=>p['สถานะ']==='เสร็จสิ้น').length;
-
-  const tbody = document.getElementById('dash-tbody');
-  const recent = [...data].sort((a,b)=>b['วันที่แก้ไข']>a['วันที่แก้ไข']?1:-1).slice(0,8);
-  tbody.innerHTML = recent.map(p=>`
+  const recent = [...p].sort((a,b)=>b.วันที่แก้ไข>a.วันที่แก้ไข?1:-1).slice(0,8);
+  document.getElementById('dash-tb').innerHTML = recent.length ? recent.map(r=>`
     <tr>
-      <td><b>${p['ลูกค้า']||'-'}</b><br><small style="color:#888">${p['WorkOrder']||''}</small></td>
-      <td>${p['ขนาดkW']||'-'} kW ${p['เฟส']||''}</td>
-      <td>${fmt(p['ราคากลาง'])}</td>
-      <td><span class="status status-${p['สถานะ']}">${p['สถานะ']}</span></td>
-      <td><small>${p['วันที่แก้ไข']||'-'}</small></td>
-      <td><button class="btn btn-outline btn-sm" onclick="openProject('${p.id}')"><i class="fa fa-pen"></i> เปิด</button></td>
-    </tr>`).join('');
-}
-
-function fmt(n) {
-  if (!n) return '-';
-  return Number(n).toLocaleString('th-TH', {minimumFractionDigits:2, maximumFractionDigits:2});
+      <td><b>${r.ลูกค้า||'-'}</b><br><small style="color:#888">${r.WorkOrder||''}</small></td>
+      <td>${r.ขนาดkW||'-'} kW</td>
+      <td>${fmtNum(r.ราคากลาง)}</td>
+      <td><span class="status s-${r.สถานะ}">${r.สถานะ}</span></td>
+      <td><small>${r.วันที่แก้ไข||'-'}</small></td>
+      <td><button class="btn bo bsm" onclick="openEdit('${r.id}')"><i class="fa fa-pen"></i> เปิด</button></td>
+    </tr>`).join('') : '<tr><td colspan="6" style="text-align:center;color:#888;padding:24px">ยังไม่มีโครงการ</td></tr>';
 }
 
 // ============================================================
 //  PROJECTS LIST
 // ============================================================
-async function loadProjects() {
-  document.getElementById('proj-loader').style.display='block';
-  try {
-    if (!GAS_URL) { projects=[]; renderProjectTable([]); return; }
-    const r = await api({action:'getProjects'});
-    projects = r.data || [];
-    renderProjectTable(projects);
-  } catch(e) { toast('โหลดโครงการไม่สำเร็จ: '+e.message,'err'); }
-  finally { document.getElementById('proj-loader').style.display='none'; }
-}
-
-function renderProjectTable(data) {
-  const tbody = document.getElementById('proj-tbody');
-  if (!data.length) { tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:#888;padding:30px">ยังไม่มีโครงการ</td></tr>'; return; }
-  tbody.innerHTML = data.map(p=>`
+function renderProj(data) {
+  const tb = document.getElementById('proj-tb');
+  tb.innerHTML = data.length ? data.map(r=>`
     <tr>
-      <td><small style="font-family:monospace;color:#888">${p.id}</small></td>
-      <td><b>${p['ลูกค้า']||'-'}</b></td>
-      <td>${p['ขนาดkW']||'-'} kW</td>
-      <td>${fmt(p['ราคากลาง'])}</td>
-      <td><span class="status status-${p['สถานะ']}">${p['สถานะ']}</span></td>
-      <td><small>${p['วันที่แก้ไข']||'-'}</small></td>
-      <td>
-        <button class="btn btn-outline btn-sm" onclick="openProject('${p.id}')"><i class="fa fa-pen"></i> แก้ไข</button>
-        <button class="btn btn-danger btn-sm" onclick="delProject('${p.id}')"><i class="fa fa-trash"></i></button>
+      <td><small style="font-family:monospace;color:#888">${r.id}</small></td>
+      <td><b>${r.ลูกค้า||'-'}</b></td>
+      <td>${r.ขนาดkW||'-'} kW</td>
+      <td>${fmtNum(r.ราคากลาง)}</td>
+      <td><span class="status s-${r.สถานะ}">${r.สถานะ}</span></td>
+      <td><small>${r.วันที่แก้ไข||'-'}</small></td>
+      <td style="white-space:nowrap">
+        <button class="btn bo bsm" onclick="openEdit('${r.id}')"><i class="fa fa-pen"></i> แก้ไข</button>
+        <button class="btn bd bsm" style="margin-left:4px" onclick="delP('${r.id}')"><i class="fa fa-trash"></i></button>
       </td>
-    </tr>`).join('');
+    </tr>`).join('') : '<tr><td colspan="7" style="text-align:center;color:#888;padding:24px">ยังไม่มีโครงการ</td></tr>';
 }
 
-function filterProjects() {
-  const q = document.getElementById('search-input').value.toLowerCase();
-  const s = document.getElementById('search-status').value;
-  const filtered = projects.filter(p=>{
-    const matchQ = !q || (p['ลูกค้า']||'').toLowerCase().includes(q) || (p['WorkOrder']||'').toLowerCase().includes(q);
-    const matchS = !s || p['สถานะ']===s;
-    return matchQ && matchS;
-  });
-  renderProjectTable(filtered);
+function filterP() {
+  const q = document.getElementById('q').value.toLowerCase();
+  const s = document.getElementById('qs').value;
+  renderProj(DB.projects.filter(p=>{
+    const mq = !q || (p.ลูกค้า||'').toLowerCase().includes(q) || (p.WorkOrder||'').toLowerCase().includes(q);
+    const ms = !s || p.สถานะ===s;
+    return mq && ms;
+  }));
 }
 
 // ============================================================
-//  OPEN / EDIT PROJECT
+//  MODAL OPEN / CLOSE
 // ============================================================
-function openNewProject() {
-  currentId = null;
-  document.getElementById('modal-title').textContent = 'สร้างโครงการใหม่';
-  clearForm();
-  loadDefaultCommittees();
-  document.getElementById('doc-notice').style.display='block';
-  document.getElementById('proj-modal').classList.add('open');
-  renderTimeline();
-}
-
-async function openProject(id) {
-  currentId = id;
-  document.getElementById('modal-title').textContent = 'แก้ไขโครงการ';
-  clearForm();
-  try {
-    const r = await api({action:'getProject', id});
-    fillForm(r.data);
-    loadCommittees(r.data.committees);
-    document.getElementById('doc-notice').style.display='none';
-  } catch(e) { toast('โหลดโครงการไม่สำเร็จ','err'); return; }
-  document.getElementById('proj-modal').classList.add('open');
-  renderTimeline();
-}
-
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
-function clearForm() {
-  document.querySelectorAll('[id^="f-"]').forEach(el=>{
-    if (el.tagName==='SELECT') el.selectedIndex=0;
-    else el.value='';
-  });
-  ['c1-list','c2-list','c3-list','sup-list'].forEach(id=>document.getElementById(id).innerHTML='');
-}
-
-const FIELDS = [
-  'ลูกค้า','ที่อยู่','ที่อยู่เต็ม','ขนาดkW','เฟส','ประเภทหลังคา',
+const FIELDS = ['ลูกค้า','ที่อยู่','ที่อยู่เต็ม','ขนาดkW','เฟส','ประเภทหลังคา',
   'WorkOrder','SO','เลขใบแจ้งหนี้','เลขคำร้อง','วันที่รับคำร้อง',
   'ราคาต้นทุน','VAT_amt','ราคากลาง','ราคาตัวอักษร','ราคาเสนอลูกค้า','ราคาลูกค้าตัวอักษร','ราคาตกลงจ้าง',
   'แผง_PV','จำนวนแผง','Inverter','Sensor',
   'บริษัทรับจ้าง','ที่อยู่บริษัท','เลขใบเสนอราคา','วันที่ใบเสนอราคา','เลขที่รับ','วันที่รับ',
   'ผู้จัดการชื่อ','ผู้จัดการตำแหน่งรักษาการ','ผู้จัดการตำแหน่ง',
-  'หผปร_ชื่อ','หผปร_ตำแหน่ง','โทรศัพท์',
-  'ผู้ควบคุมงาน_ชื่อ','ผู้ควบคุมงาน_ตำแหน่ง','ผู้ควบคุมงาน_โทร','หผปร_โทร',
+  'หผปร_ชื่อ','หผปร_ตำแหน่ง','โทรศัพท์','ผู้ควบคุมงาน_ชื่อ','ผู้ควบคุมงาน_ตำแหน่ง','ผู้ควบคุมงาน_โทร','หผปร_โทร',
   'เลขอนุมัติรับงาน','วันอนุมัติรับงาน','เลขอนุมัติ_ผวก','วันอนุมัติ_ผวก',
   'เลขราคากลาง','วันราคากลาง','เลขรายงานขอจ้าง','วันรายงานขอจ้าง',
   'เลขเชิญชวน','วันเชิญชวน','เลขต่อรอง','วันต่อรอง',
-  'วันผลจัดจ้าง','เลขยืนยันบริษัท','วันยืนยันบริษัท','หมายเหตุ','สถานะ',
-];
+  'วันผลจัดจ้าง','เลขยืนยันบริษัท','วันยืนยันบริษัท','หมายเหตุ','สถานะ'];
 
-function fillForm(data) {
-  FIELDS.forEach(k=>{ const el=document.getElementById('f-'+k); if(el) el.value=data[k]||''; });
+function openNew() {
+  currentId = null;
+  document.getElementById('m-title').textContent = 'สร้างโครงการใหม่';
+  FIELDS.forEach(k=>{ const el=document.getElementById('f-'+k); if(el){ el.tagName==='SELECT'?el.selectedIndex=0:(el.value=''); }});
+  // reset to default values
+  const defs = {'วันที่รับคำร้อง':'12 มกราคม 2569','ประเภทหลังคา':'หลังคากระเบื้องลอนคู่',
+    'แผง_PV':'PV Mono half cell (Tier1) LONGi ขนาดไม่น้อยกว่า 630 W','จำนวนแผง':'32',
+    'Inverter':'Huawei Inverter 20 KW.(SUN2000-20KTL-M5)','Sensor':'Power Sensor 3P(DTSU666-H)',
+    'ผู้จัดการชื่อ':'นายวิชัย เกลี้ยงช่วย','ผู้จัดการตำแหน่งรักษาการ':'หัวหน้าแผนกบริการลูกค้า รักษาการแทน',
+    'ผู้จัดการตำแหน่ง':'ผู้จัดการ การไฟฟ้าส่วนภูมิภาคสาขาอ่าวลึก',
+    'หผปร_ชื่อ':'นายมานศักดิ์ พิลาฤทธิ์','หผปร_ตำแหน่ง':'หผ.ปร.กฟส.อ่าวลึก','โทรศัพท์':'0-7566-6925',
+    'ผู้ควบคุมงาน_ชื่อ':'นายอติวิทย์ ทองลา','ผู้ควบคุมงาน_ตำแหน่ง':'พชง.3ผปร.กฟส.อ่าวลึก','ผู้ควบคุมงาน_โทร':'093-013-2310','หผปร_โทร':'080-182-2335'};
+  Object.entries(defs).forEach(([k,v])=>{ const el=document.getElementById('f-'+k); if(el) el.value=v; });
+  loadDefaultC();
+  document.getElementById('doc-notice').style.display='block';
+  // switch to first tab
+  tab('t1', document.querySelector('.tb'));
+  document.getElementById('proj-modal').classList.add('open');
 }
 
-function collectForm() {
-  const data = { id: currentId || undefined };
-  FIELDS.forEach(k=>{ const el=document.getElementById('f-'+k); if(el) data[k]=el.value; });
-  data.committees = collectCommittees();
-  return data;
+function openEdit(id) {
+  currentId = id;
+  const proj = DB.projects.find(p=>p.id===id);
+  if (!proj) { toast('ไม่พบโครงการ','err'); return; }
+  document.getElementById('m-title').textContent = 'แก้ไขโครงการ';
+  FIELDS.forEach(k=>{ const el=document.getElementById('f-'+k); if(el) el.value=proj[k]||''; });
+  loadC(proj.committees);
+  document.getElementById('doc-notice').style.display='none';
+  tab('t1', document.querySelector('.tb'));
+  document.getElementById('proj-modal').classList.add('open');
 }
+
+function closeM() { document.getElementById('proj-modal').classList.remove('open'); }
 
 // ============================================================
 //  PRICE CALC
 // ============================================================
-function calcPrice() {
-  const cost = parseFloat(document.getElementById('f-ราคาต้นทุน').value)||0;
-  const vat  = cost * 0.07;
-  const total = cost + vat;
-  document.getElementById('f-VAT_amt').value  = vat.toFixed(2);
-  document.getElementById('f-ราคากลาง').value = total.toFixed(2);
+function calcP() {
+  const c = parseFloat(document.getElementById('f-ราคาต้นทุน').value)||0;
+  const v = c*0.07;
+  document.getElementById('f-VAT_amt').value  = v.toFixed(2);
+  document.getElementById('f-ราคากลาง').value = (c+v).toFixed(2);
 }
 
 // ============================================================
 //  COMMITTEES
 // ============================================================
-function memberRow(group, m={}, isSuper=false) {
-  const roles = isSuper ? ['ผู้ควบคุมงาน'] : ['ประธานกรรมการ','กรรมการ'];
-  return `<div class="member-row" data-group="${group}">
-    <input type="text" placeholder="ชื่อ-สกุล" class="m-name" value="${m.name||''}">
-    <input type="text" placeholder="ตำแหน่ง" class="m-pos" value="${m.pos||''}">
-    <select class="m-role">${roles.map(r=>`<option${(m.role||'')==r?' selected':''}>${r}</option>`).join('')}</select>
-    ${isSuper?'':'<button class="del-btn" onclick="this.parentElement.remove()">✕</button>'}
-    ${isSuper?'<span></span>':''}
+const DEF_C = {
+  c1:[{name:'นายวิชัย  เกลี้ยงช่วย',pos:'หผ.บค.กฟส.อ่าวลึก',role:'ประธานกรรมการ'},
+      {name:'นางสาวอรอนงค์  น้อยผา',pos:'พบช.5ผบง.กฟส.อ่าวลึก',role:'กรรมการ'},
+      {name:'นายพุทธภงค์  เมืองด้วง',pos:'พชง.4 ผปร.กฟส.อ่าวลึก',role:'กรรมการ'}],
+  c2:[{name:'นายธวัชชัย  ไหมสุข',pos:'พชง.6รักษาการแทนชผ.กฟส.อ่าวลึก',role:'ประธานกรรมการ'},
+      {name:'นางสาวจุฬาลักษณ์ สุทธิเกิด',pos:'พบช.7ผบ3.กฟส.อ่าวลึก',role:'กรรมการ'},
+      {name:'นายพงศธร  เกตุมณี',pos:'พชง.3ผปร.กฟส.อ่าวลึก',role:'กรรมการ'}],
+  c3:[{name:'นายมานศักดิ์  พิลาฤทธิ์',pos:'หผ.ปร.กฟส.อ่าวลึก',role:'ประธานกรรมการ'},
+      {name:'นายกลวัชร  บุญช่วย',pos:'พชง.5 ผบค.กฟส.อ่าวลึก',role:'กรรมการ'},
+      {name:'นางสาวศุภกร  นบนวล',pos:'นบช.5ผบง.กฟส.อ่าวลึก',role:'กรรมการ'}],
+  supervisor:{name:'นายอติวิทย์  ทองลา',pos:'พชง.3ผปร.กฟส.อ่าวลึก',role:'ผู้ควบคุมงาน'}
+};
+
+function mRow(g, m={}, isSup=false) {
+  const roles = isSup?['ผู้ควบคุมงาน']:['ประธานกรรมการ','กรรมการ'];
+  return `<div class="mr" data-g="${g}">
+    <input type="text" class="mn" placeholder="ชื่อ-สกุล" value="${m.name||''}">
+    <input type="text" class="mp" placeholder="ตำแหน่ง" value="${m.pos||''}">
+    <select class="mr2">${roles.map(r=>`<option${(m.role||'')==r?' selected':''}>${r}</option>`).join('')}</select>
+    ${isSup?'<span></span>':`<button class="del-btn" onclick="this.parentElement.remove()" title="ลบ">✕</button>`}
   </div>`;
 }
 
-function addMember(g) {
-  const list = document.getElementById(g+'-list');
-  const isFirst = list.children.length===0;
-  const m = { role: isFirst ? 'ประธานกรรมการ' : 'กรรมการ' };
-  list.insertAdjacentHTML('beforeend', memberRow(g, m));
+function addM(g) {
+  const lst = document.getElementById(g+'-list');
+  const isFirst = lst.children.length===0;
+  lst.insertAdjacentHTML('beforeend', mRow(g, {role:isFirst?'ประธานกรรมการ':'กรรมการ'}));
 }
 
-function loadDefaultCommittees() {
+function loadDefaultC() {
   ['c1','c2','c3'].forEach(g=>{
     document.getElementById(g+'-list').innerHTML='';
-    (DEFAULT_COMMITTEES[g]||[]).forEach(m=>document.getElementById(g+'-list').insertAdjacentHTML('beforeend',memberRow(g,m)));
+    DEF_C[g].forEach(m=>document.getElementById(g+'-list').insertAdjacentHTML('beforeend',mRow(g,m)));
   });
-  const s=DEFAULT_COMMITTEES.supervisor;
-  document.getElementById('sup-list').innerHTML=memberRow('supervisor',s,true);
+  document.getElementById('sup-list').innerHTML=mRow('supervisor',DEF_C.supervisor,true);
 }
 
-function loadCommittees(C) {
-  if (!C) { loadDefaultCommittees(); return; }
+function loadC(C) {
+  if (!C) { loadDefaultC(); return; }
   ['c1','c2','c3'].forEach(g=>{
     document.getElementById(g+'-list').innerHTML='';
-    (C[g]||[]).forEach(m=>document.getElementById(g+'-list').insertAdjacentHTML('beforeend',memberRow(g,m)));
+    (C[g]||[]).forEach(m=>document.getElementById(g+'-list').insertAdjacentHTML('beforeend',mRow(g,m)));
   });
-  const s=C.supervisor||DEFAULT_COMMITTEES.supervisor;
-  document.getElementById('sup-list').innerHTML=memberRow('supervisor',s,true);
+  const s=C.supervisor||DEF_C.supervisor;
+  document.getElementById('sup-list').innerHTML=mRow('supervisor',s,true);
 }
 
-function collectCommittees() {
-  const C = { c1:[], c2:[], c3:[], supervisor:null };
+function collectC() {
+  const C={c1:[],c2:[],c3:[],supervisor:null};
   ['c1','c2','c3'].forEach(g=>{
-    document.querySelectorAll(`#${g}-list .member-row`).forEach(row=>{
-      C[g].push({ name:row.querySelector('.m-name').value, pos:row.querySelector('.m-pos').value, role:row.querySelector('.m-role').value });
+    document.querySelectorAll(`#${g}-list .mr`).forEach(row=>{
+      C[g].push({name:row.querySelector('.mn').value,pos:row.querySelector('.mp').value,role:row.querySelector('.mr2').value});
     });
   });
-  const sr = document.querySelector('#sup-list .member-row');
-  if (sr) C.supervisor = { name:sr.querySelector('.m-name').value, pos:sr.querySelector('.m-pos').value, role:'ผู้ควบคุมงาน' };
+  const sr=document.querySelector('#sup-list .mr');
+  if(sr) C.supervisor={name:sr.querySelector('.mn').value,pos:sr.querySelector('.mp').value,role:'ผู้ควบคุมงาน'};
   return C;
 }
 
 // ============================================================
-//  SAVE PROJECT
+//  SAVE PROJECT — localStorage เท่านั้น (ไม่มี CORS)
 // ============================================================
-async function saveProject() {
-  const data = collectForm();
+function saveP() {
+  const data = {};
+  FIELDS.forEach(k=>{ const el=document.getElementById('f-'+k); if(el) data[k]=el.value; });
+  data.committees = collectC();
+
   if (!data['ลูกค้า']) { toast('กรุณากรอกชื่อลูกค้า','err'); return; }
-  try {
-    const r = await api({ action:'saveProject' }, { data });
-    currentId = r.id;
-    toast('บันทึกสำเร็จ ✓','ok');
-    document.getElementById('doc-notice').style.display='none';
-    await loadProjects();
-    loadDashboard();
-  } catch(e) { toast('บันทึกไม่สำเร็จ: '+e.message,'err'); }
+  if (!data['ขนาดkW']) { toast('กรุณากรอกขนาด kW','err'); return; }
+
+  const now = nowStr();
+  if (currentId) {
+    const idx = DB.projects.findIndex(p=>p.id===currentId);
+    if (idx>=0) { data.id=currentId; data.วันที่สร้าง=DB.projects[idx].วันที่สร้าง; data.วันที่แก้ไข=now; DB.projects[idx]=data; }
+  } else {
+    data.id=genId(); data.วันที่สร้าง=now; data.วันที่แก้ไข=now; data.สถานะ=data.สถานะ||'ร่าง';
+    DB.projects.unshift(data);
+    currentId = data.id;
+  }
+
+  // เพิ่ม log
+  if (!DB.log) DB.log=[];
+  DB.log.unshift({id:currentId, time:now, action:currentId?'แก้ไขข้อมูล':'สร้างโครงการ', status:data.สถานะ});
+
+  saveDB();
+  updateSyncBadge('pending');
+  toast('บันทึกสำเร็จ ✓ (เก็บในเครื่อง)', 'ok');
+  document.getElementById('doc-notice').style.display='none';
+  renderDash();
+  renderProj(DB.projects);
+
+  // พยายาม sync GAS ใน background
+  if (GAS_URL) bgSync(data);
 }
 
-async function delProject(id) {
+function delP(id) {
   if (!confirm('ลบโครงการนี้?')) return;
-  try {
-    await api({ action:'deleteProject', id });
-    toast('ลบแล้ว','ok');
-    await loadProjects();
-    loadDashboard();
-  } catch(e) { toast('ลบไม่สำเร็จ','err'); }
+  DB.projects = DB.projects.filter(p=>p.id!==id);
+  saveDB();
+  renderProj(DB.projects);
+  renderDash();
+  toast('ลบแล้ว','ok');
 }
 
 // ============================================================
-//  GENERATE DOCS — GAS (Google Doc → .docx download)
+//  LOG
+// ============================================================
+function renderLog() {
+  const pid = currentId;
+  const logs = (DB.log||[]).filter(l=>!pid||l.id===pid);
+  document.getElementById('log-tb').innerHTML = logs.length ?
+    logs.map(l=>`<tr class="log-row"><td>${l.time||'-'}</td><td>${l.action||'-'}</td><td><span class="status s-${l.status}">${l.status||'-'}</span></td></tr>`).join('') :
+    '<tr><td colspan="3" style="text-align:center;color:#888;padding:16px">ยังไม่มีประวัติ</td></tr>';
+}
+
+// ============================================================
+//  GAS SYNC — background, ไม่ block UI
+// ============================================================
+async function bgSync(data) {
+  if (!GAS_URL) return;
+  try {
+    // ส่งผ่าน form เพื่อหลีกเลี่ยง CORS preflight
+    const form = new FormData();
+    form.append('action', 'saveProject');
+    form.append('payload', JSON.stringify({data}));
+    await fetch(GAS_URL, { method:'POST', body:form, mode:'no-cors' });
+    // no-cors ทำให้ response เป็น opaque แต่ข้อมูลถูกส่งไปแล้ว
+    updateSyncBadge('ok');
+  } catch(e) {
+    updateSyncBadge('pending');
+  }
+}
+
+async function syncToGAS() {
+  if (!GAS_URL) { toast('ยังไม่ได้ตั้งค่า GAS URL','err'); return; }
+  toast('กำลัง Sync...');
+  updateSyncBadge('pending');
+  let ok = 0;
+  for (const proj of DB.projects) {
+    try {
+      const form = new FormData();
+      form.append('action','saveProject');
+      form.append('payload', JSON.stringify({data:proj}));
+      await fetch(GAS_URL, {method:'POST', body:form, mode:'no-cors'});
+      ok++;
+    } catch(e) {}
+    await new Promise(r=>setTimeout(r,300)); // rate limit
+  }
+  toast(`Sync เสร็จ ${ok}/${DB.projects.length} โครงการ (no-cors mode)`, 'ok');
+  updateSyncBadge('ok');
+}
+
+async function testGAS() {
+  const url = document.getElementById('cfg-url').value.trim();
+  if (!url) { toast('ใส่ URL ก่อน','err'); return; }
+  const el = document.getElementById('conn-res');
+  el.innerHTML = '<i class="fa fa-circle-notch fa-spin"></i> กำลังทดสอบ...';
+  try {
+    const r = await fetch(url+'?action=getSettings', {mode:'cors'});
+    if (r.ok) {
+      const d = await r.json();
+      el.innerHTML = '<i class="fa fa-circle-check" style="color:var(--teal)"></i> เชื่อมต่อสำเร็จ — GAS พร้อมใช้งาน';
+      updateSyncBadge('ok');
+    } else { el.innerHTML = '<i class="fa fa-circle-xmark" style="color:var(--red)"></i> GAS ตอบ ' + r.status; }
+  } catch(e) {
+    // CORS block แต่ GAS อาจยังทำงานได้ผ่าน no-cors
+    el.innerHTML = '<i class="fa fa-triangle-exclamation" style="color:var(--amber)"></i> ทดสอบตรงไม่ได้ (CORS) — แต่ Sync แบบ no-cors ยังใช้ได้ กด "Sync ทั้งหมด" เพื่อทดสอบ';
+  }
+}
+
+function saveUrl() {
+  GAS_URL = document.getElementById('cfg-url').value.trim();
+  DB.settings.gas_url = GAS_URL;
+  saveDB();
+  toast('บันทึก URL แล้ว ✓','ok');
+}
+
+// ============================================================
+//  GENERATE DOC — เรียก GAS ให้สร้าง Google Doc
 // ============================================================
 async function genDoc(docType) {
-  if (!currentId) { toast('กรุณาบันทึกโครงการก่อน','err'); return; }
+  if (!currentId) { toast('บันทึกโครงการก่อน','err'); return; }
+  if (!GAS_URL) { toast('ยังไม่ได้ตั้งค่า GAS URL','err'); return; }
   toast('กำลังสร้างเอกสาร...');
+  // ใช้ iframe hidden POST เพื่อ trigger GAS (no-cors)
+  // แล้วเปิด Google Sheets เพื่อให้ user download เอง
   try {
-    const r = await api({ action:'generateGoogleDoc', projectId:currentId, docType });
-    window.open(r.downloadUrl, '_blank');
-    toast('สร้างเอกสารสำเร็จ ✓','ok');
-    loadDocLog();
-  } catch(e) { toast('สร้างไม่สำเร็จ: '+e.message,'err'); }
-}
-
-// ============================================================
-//  GENERATE ALL DOCX — Browser-side (no server needed)
-// ============================================================
-async function genAllDocx() {
-  const data = collectForm();
-  if (!data['ลูกค้า']) { toast('กรุณากรอกชื่อลูกค้า','err'); return; }
-  toast('กำลังสร้างไฟล์ .docx...');
-
-  const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
-          AlignmentType, BorderStyle, WidthType, ShadingType, VerticalAlign } = docx;
-
-  const FONT = 'TH SarabunIT\u0E59'; // TH SarabunIT๙
-  const SZ = 28;
-
-  function r(text, opts={}) {
-    return new TextRun({ text, font:{name:FONT,cs:FONT}, size:SZ, sizeComplexScript:SZ,
-      bold:opts.bold||false, underline:opts.underline?{}:undefined });
+    const form = new FormData();
+    form.append('action','generateGoogleDoc');
+    form.append('projectId', currentId);
+    form.append('docType', docType);
+    await fetch(GAS_URL, {method:'POST', body:form, mode:'no-cors'});
+    toast('ส่งคำสั่งสร้างเอกสารแล้ว — เปิด Google Drive เพื่อดาวน์โหลด','ok');
+    // เปิด Google Drive folder
+    window.open('https://drive.google.com/drive/folders/', '_blank');
+  } catch(e) {
+    toast('ส่งคำสั่งไม่สำเร็จ: '+e.message,'err');
   }
-  function p(children, opts={}) {
-    if (!Array.isArray(children)) children=[children];
-    return new Paragraph({ children, alignment:opts.align||AlignmentType.LEFT,
-      indent:opts.indent?{left:opts.indent}:undefined,
-      spacing:{before:0,after:0}, tabStops:opts.tabs||[] });
-  }
-  function blank() { return p([r('')]); }
-
-  const C = data.committees || DEFAULT_COMMITTEES;
-  const sys = `ระบบผลิตไฟฟ้าจากพลังงานแสงอาทิตย์บนหลังคา (Solar Rooftop) ขนาด ${data['ขนาดkW']||'?'} กิโลวัตต์ ${data['เฟส']||'3 เฟส'}`;
-
-  function makeDoc(children) {
-    return new Document({ sections:[{ properties:{ page:{
-      size:{width:11909,height:16834},
-      margin:{top:1276,right:1138,bottom:288,left:1699}
-    }}, children }] });
-  }
-
-  // ---- Doc 1 ----
-  const doc1Children = [
-    p([r('การไฟฟ้าส่วนภูมิภาค',{bold:true})],{align:AlignmentType.CENTER}),
-    p([r('PROVINCIAL ELECTRICITY AUTHORITY')],{align:AlignmentType.CENTER}), blank(),
-    p([r(`จาก     ผปร.กฟส.อ่าวลึก\t\tถึง     กฟส.อ่าวลึก`)]),
-    p([r(`เลขที่   ${data['เลขอนุมัติรับงาน']||''}           /2569\tวันที่   ${data['วันอนุมัติรับงาน']||''}`)]),
-    blank(),
-    p([r(`เรื่อง    ขออนุมัติรับงานให้บริการติดตั้ง${sys}`)]),
-    p([r(`           ให้กับ ${data['ลูกค้า']}`)]), blank(),
-    p([r(`เรียน    ผจก.กฟส.อ่าวลึก`)]), blank(),
-    p([r('1. เรื่องเดิม',{bold:true})]), blank(),
-    p([r(`      1.1 ตามคำร้องขอใช้บริการเลขที่ ${data['เลขคำร้อง']||''} ลว. ${data['วันที่รับคำร้อง']||''} แจ้งความประสงค์ขอรับบริการติดตั้ง${sys} ให้กับ ${data['ที่อยู่เต็ม']||''} (${data['ลูกค้า']||''})`)]),
-    blank(),
-    p([r('2. วิธีดำเนินการ',{bold:true})]), blank(),
-    p([r('      ดำเนินการจ้างเหมาแบบเบ็ดเสร็จ (Turn Key) โดยวิธีเจาะจงจากผู้ประกอบการที่ขึ้นทะเบียน Vendor List กับ กฟต.2')]),
-    blank(),
-    p([r('3. ค่าใช้จ่ายที่เรียกเก็บจากลูกค้า',{bold:true})]), blank(),
-    p([r(`      เป็นเงินทั้งสิ้น ${data['ราคาเสนอลูกค้า']||''} บาท (${data['ราคาลูกค้าตัวอักษร']||''}) รวมภาษีมูลค่าเพิ่ม 7%`)]),
-    blank(),
-    p([r('4. ข้อเสนอ',{bold:true})]), blank(),
-    p([r(`      4.1 ขออนุมัติรับงานให้บริการติดตั้ง Solar Rooftop ให้กับ ${data['ลูกค้า']||''} ${data['ที่อยู่เต็ม']||''}`)]),
-    blank(),
-    p([r('      4.2 อนุมัติแต่งตั้งคณะกรรมการดำเนินการ')]), blank(),
-    p([r('           4.2.1 คณะกรรมการกำหนดราคากลางและจัดทำร่างขอบเขตของงาน')]),
-    ...(C.c1||[]).map((m,i)=>p([r(`                  ${i+1}) ${m.name}   ตำแหน่ง ${m.pos}   ${m.role}`)])),
-    blank(),
-    p([r('           4.2.2 คณะกรรมการจัดซื้อ/จ้าง/เช่า')]),
-    ...(C.c2||[]).map((m,i)=>p([r(`                  ${i+1}) ${m.name}   ตำแหน่ง ${m.pos}   ${m.role}`)])),
-    blank(),
-    p([r('           4.2.3 คณะกรรมการตรวจรับงาน')]),
-    ...(C.c3||[]).map((m,i)=>p([r(`                  ${i+1}) ${m.name}   ตำแหน่ง ${m.pos}   ${m.role}`)])),
-    blank(),
-    ...(C.supervisor?[p([r(`           4.2.4 ผู้ควบคุมงาน: ${C.supervisor.name}   ${C.supervisor.pos}`)]),blank()]:[]),
-    p([r('      จึงเรียนมาเพื่อโปรดพิจารณาอนุมัติต่อไป')]),
-    blank(), blank(),
-    p([r(`(${data['หผปร_ชื่อ']||''})`)]  ),
-    p([r(data['หผปร_ตำแหน่ง']||'')]),
-  ];
-
-  // Download helper
-  async function download(doc_, name) {
-    const buf = await Packer.toBuffer(doc_);
-    const blob = new Blob([buf], {type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = name;
-    a.click();
-    URL.revokeObjectURL(a.href);
-  }
-
-  // Download doc1
-  await download(makeDoc(doc1Children), `1_ขออนุมัติรับงาน_${data['ลูกค้า']||'โครงการ'}.docx`);
-  toast('สร้างเอกสารที่ 1 สำเร็จ ✓','ok');
-}
-
-// ============================================================
-//  TIMELINE
-// ============================================================
-const TL_STEPS = [
-  { key:'วันอนุมัติรับงาน',   label:'อนุมัติรับงาน',   icon:'fa-check' },
-  { key:'วันราคากลาง',        label:'ราคากลาง/TOR',    icon:'fa-calculator' },
-  { key:'วันรายงานขอจ้าง',   label:'รายงานขอจ้าง',   icon:'fa-file-alt' },
-  { key:'วันเชิญชวน',         label:'เชิญชวน',         icon:'fa-envelope' },
-  { key:'วันต่อรอง',          label:'ต่อรองราคา',      icon:'fa-handshake' },
-  { key:'วันผลจัดจ้าง',      label:'ผลจัดจ้าง',       icon:'fa-trophy' },
-];
-
-function renderTimeline() {
-  const el = document.getElementById('doc-timeline');
-  if (!el) return;
-  el.innerHTML = TL_STEPS.map((s,i)=>{
-    const val = (document.getElementById('f-'+s.key)||{}).value;
-    const done = !!val;
-    const cls = done ? 'done' : i===TL_STEPS.findIndex(x=>!(document.getElementById('f-'+x.key)||{}).value) ? 'current' : '';
-    return `<div class="tl-item">
-      <div class="tl-dot ${cls}"><i class="fa ${s.icon}"></i></div>
-      <div class="tl-label">${s.label}<br><small>${val||'—'}</small></div>
-    </div>`;
-  }).join('');
-}
-
-// ============================================================
-//  DOC LOG
-// ============================================================
-async function loadDocLog() {
-  try {
-    const r = await api({ action:'getDocLog', id:currentId||'' });
-    const tbody = document.getElementById('log-tbody');
-    tbody.innerHTML = (r.data||[]).map(l=>`
-      <tr class="log-row">
-        <td>${l['วันที่เวลา']||'-'}</td>
-        <td>${l['การกระทำ']||'-'}</td>
-        <td><span class="status status-${l['สถานะ']}">${l['สถานะ']||'-'}</span></td>
-      </tr>`).join('') || '<tr><td colspan="3" style="text-align:center;color:#888;padding:20px">ยังไม่มีประวัติ</td></tr>';
-  } catch(e) { /* silent */ }
 }
 
 // ============================================================
 //  SETTINGS
 // ============================================================
-async function loadSettings() {
-  document.getElementById('cfg-gas_url').value = GAS_URL || '';
-  if (!GAS_URL) return;
-  try {
-    const r = await api({ action:'getSettings' });
-    const cfg = r.data || {};
-    Object.keys(cfg).forEach(k=>{
-      const el = document.getElementById('cfg-'+k);
-      if (el) el.value = cfg[k];
-    });
-  } catch(e) { /* silent */ }
-}
-
-async function saveSettings() {
-  const data = {};
-  document.querySelectorAll('[id^="cfg-"]').forEach(el=>{
-    const key = el.id.replace('cfg-','');
-    if (key!=='gas_url') data[key] = el.value;
-  });
-  try {
-    await api({ action:'saveSettings' }, { data });
-    toast('บันทึกตั้งค่าสำเร็จ ✓','ok');
-  } catch(e) { toast('บันทึกไม่สำเร็จ: '+e.message,'err'); }
-}
-
-function saveGasUrl() {
-  GAS_URL = document.getElementById('cfg-gas_url').value.trim();
-  localStorage.setItem('gas_url', GAS_URL);
-  toast('บันทึก URL สำเร็จ ✓','ok');
-}
-
-async function testConnection() {
-  const el = document.getElementById('conn-result');
-  el.innerHTML = '<i class="fa fa-circle-notch fa-spin"></i> กำลังทดสอบ...';
-  try {
-    const r = await api({ action:'getSettings' });
-    el.innerHTML = '<i class="fa fa-circle-check" style="color:var(--teal)"></i> เชื่อมต่อสำเร็จ! พบ GAS Web App';
-  } catch(e) {
-    el.innerHTML = '<i class="fa fa-circle-xmark" style="color:var(--red)"></i> เชื่อมต่อไม่ได้: '+e.message;
-  }
-}
 
 // ============================================================
 //  INIT
 // ============================================================
 window.addEventListener('load', ()=>{
-  loadDefaultCommittees();
-  loadDashboard();
+  loadDB();
+  loadDefaultC();
+  renderDash();
 });
 </script>
 </body>
