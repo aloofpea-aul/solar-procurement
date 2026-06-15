@@ -614,6 +614,69 @@ function switchTab(id) {
 // ============================================================
 async function api(params={}, body=null) {
   if (!GAS_URL) { toast('ยังไม่ได้ตั้งค่า GAS URL','err'); throw new Error('no url'); }
+
+  // ลอง fetch() ก่อน (Chrome/Firefox), ถ้าถูกบล็อกจาก Edge → fallback JSONP
+  const merged = { ...params };
+  if (body) merged.payload = JSON.stringify(body);
+  const qs  = new URLSearchParams(merged).toString();
+  const url = GAS_URL + '?' + qs;
+
+  try {
+    const res  = await fetch(url, { method:'GET', redirect:'follow' });
+    const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); }
+    catch(e) {
+      // อาจเป็น JSONP response — strip callback wrapper
+      const m = text.match(/^\w+\((.+)\);?$/s);
+      if (m) data = JSON.parse(m[1]);
+      else throw new Error('ตอบกลับไม่ใช่ JSON');
+    }
+    if (!data.ok) throw new Error(data.error || 'API error');
+    return data;
+  } catch(fetchErr) {
+    // fetch ถูกบล็อก (Edge Tracking Prevention) → ใช้ JSONP
+    if (fetchErr.message.includes('Failed to fetch') || fetchErr.message.includes('NetworkError')) {
+      return apiJsonp(params, body);
+    }
+    throw fetchErr;
+  }
+}
+
+function apiJsonp(params={}, body=null) {
+  return new Promise((resolve, reject) => {
+    const cbName = '_cb' + Date.now() + Math.random().toString(36).substr(2,4);
+    const merged = { ...params, callback: cbName };
+    if (body) merged.payload = JSON.stringify(body);
+    const qs  = new URLSearchParams(merged).toString();
+    const url = GAS_URL + '?' + qs;
+
+    window[cbName] = (data) => {
+      delete window[cbName];
+      if (s.parentNode) s.parentNode.removeChild(s);
+      if (!data.ok) reject(new Error(data.error || 'API error'));
+      else resolve(data);
+    };
+
+    const s = document.createElement('script');
+    s.src = url;
+    s.onerror = () => {
+      delete window[cbName];
+      if (s.parentNode) s.parentNode.removeChild(s);
+      reject(new Error('JSONP ล้มเหลว — ตรวจสอบ GAS URL และ Deploy settings'));
+    };
+    const tid = setTimeout(() => {
+      if (window[cbName]) {
+        delete window[cbName];
+        try { s.parentNode.removeChild(s); } catch(e) {}
+        reject(new Error('Timeout — GAS ไม่ตอบสนอง'));
+      }
+    }, 20000);
+    s.onload = () => clearTimeout(tid);
+    document.head.appendChild(s);
+  });
+}, body=null) {
+  if (!GAS_URL) { toast('ยังไม่ได้ตั้งค่า GAS URL','err'); throw new Error('no url'); }
   // ใช้ JSONP เพื่อหลีกเลี่ยง CORS ทั้งหมด
   return new Promise((resolve, reject) => {
     const cbName = 'cb_' + Date.now() + '_' + Math.random().toString(36).substr(2,5);
