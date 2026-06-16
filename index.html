@@ -111,7 +111,8 @@ nav .logo{font-size:20px} nav h1{font-size:15px;font-weight:600;flex:1}
     <input id="q" placeholder="🔍 ค้นหาชื่อลูกค้า, Work Order..." oninput="filterP()">
     <select id="qs" onchange="filterP()"><option value="">— สถานะทั้งหมด —</option><option>ร่าง</option><option>อนุมัติ</option><option>เสร็จสิ้น</option><option>ยกเลิก</option></select>
     <button class="btn bp" onclick="openNew()"><i class="fa fa-plus"></i> สร้างใหม่</button>
-    <button class="btn bo bsm" onclick="syncGAS()" title="Sync ขึ้น Google Sheets"><i class="fa fa-cloud-arrow-up"></i> Sync GAS</button>
+    <button class="btn bo bsm" onclick="syncGAS()" title="Sync ขึ้น Google Sheets"><i class="fa fa-cloud-arrow-up"></i> Sync → GAS</button>
+    <button class="btn bo bsm" onclick="loadFromGAS()" title="โหลดข้อมูลจาก Google Sheets"><i class="fa fa-cloud-arrow-down"></i> โหลด ← GAS</button>
   </div>
   <div class="card"><div class="cb">
     <table class="dt"><thead><tr><th>ID</th><th>ลูกค้า</th><th>ขนาด</th><th>ราคากลาง</th><th>สถานะ</th><th>แก้ไขล่าสุด</th><th>จัดการ</th></tr></thead>
@@ -743,38 +744,53 @@ function renderLog() {
 }
 
 // ================================================================
-//  GAS SYNC (no-cors FormData — ไม่มี preflight)
+//  GAS API — fetch ปกติ (HtmlService แก้ CORS แล้ว)
 // ================================================================
-async function bgSyncProject(data) {
-  if (!GAS_URL) return;
-  try {
-    const fd = new FormData();
-    fd.append('action','saveProject');
-    fd.append('payload', JSON.stringify({data}));
-    await fetch(GAS_URL, {method:'POST', body:fd, mode:'no-cors'});
-    setSyncBadge('ok');
-    DB.log.unshift({id:data.id, time:nowStr(), action:'Sync → GAS', status:data.สถานะ});
-    saveDB();
-  } catch(e) { setSyncBadge('p'); }
+async function gasAPI(params={}, body=null) {
+  if (!GAS_URL) throw new Error('ยังไม่ได้ตั้งค่า GAS URL');
+  const qs  = new URLSearchParams(params).toString();
+  const url = GAS_URL + (qs?'?'+qs:'');
+  const opt = body
+    ? { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) }
+    : { method:'GET' };
+  const res  = await fetch(url, opt);
+  const text = await res.text();
+  // HtmlService ส่ง Content-Type: text/html แต่ body เป็น JSON
+  try { return JSON.parse(text); }
+  catch(e) { throw new Error('GAS ตอบกลับไม่ถูกต้อง: '+text.slice(0,80)); }
 }
 
 async function syncGAS() {
   if (!GAS_URL) { toast('ยังไม่ได้ตั้งค่า GAS URL','err'); return; }
-  toast('กำลัง Sync...');
+  toast('กำลัง Sync ทั้งหมดขึ้น GAS...');
   setSyncBadge('p');
-  let ok=0;
+  let ok=0, fail=0;
   for (const proj of DB.projects) {
     try {
-      const fd = new FormData();
-      fd.append('action','saveProject');
-      fd.append('payload', JSON.stringify({data:proj}));
-      await fetch(GAS_URL,{method:'POST',body:fd,mode:'no-cors'});
-      ok++;
-    } catch(e) {}
-    await new Promise(r=>setTimeout(r,250));
+      const r = await gasAPI({action:'saveProject'}, {data:proj});
+      if (r.ok) ok++; else fail++;
+    } catch(e) { fail++; }
+    await new Promise(r=>setTimeout(r,300));
   }
-  setSyncBadge('ok');
-  toast(`Sync สำเร็จ ${ok}/${DB.projects.length} โครงการ ✓`,'ok');
+  setSyncBadge(fail===0?'ok':'p');
+  toast(fail===0
+    ? `✅ Sync สำเร็จทั้งหมด ${ok} โครงการ`
+    : `⚠️ Sync สำเร็จ ${ok} / ล้มเหลว ${fail}`, fail===0?'ok':'');
+}
+
+async function loadFromGAS() {
+  if (!GAS_URL) { toast('ยังไม่ได้ตั้งค่า GAS URL','err'); return; }
+  toast('กำลังโหลดข้อมูลจาก Google Sheets...');
+  try {
+    const r = await gasAPI({action:'getProjects'});
+    if (!r.ok) throw new Error(r.error);
+    DB.projects = r.data || [];
+    saveDB();
+    renderDash();
+    renderProjTable(DB.projects);
+    setSyncBadge('ok');
+    toast(`✅ โหลดข้อมูลสำเร็จ ${DB.projects.length} โครงการ`,'ok');
+  } catch(e) { toast('โหลดไม่สำเร็จ: '+e.message,'err'); }
 }
 
 async function testGAS() {
@@ -783,14 +799,18 @@ async function testGAS() {
   const el = document.getElementById('conn-res');
   el.innerHTML = '<i class="fa fa-circle-notch fa-spin"></i> กำลังทดสอบ...';
   try {
-    const r = await fetch(url+'?action=getSettings', {mode:'cors'});
-    const d = await r.json();
-    el.innerHTML = '<i class="fa fa-circle-check" style="color:var(--teal)"></i> <b>เชื่อมต่อสำเร็จ!</b> GAS พร้อมใช้งาน';
-    setSyncBadge('ok');
+    const r = await fetch(url+'?action=getSettings');
+    const text = await r.text();
+    const d = JSON.parse(text);
+    if (d.ok) {
+      el.innerHTML = '<i class="fa fa-circle-check" style="color:var(--teal)"></i> <b>เชื่อมต่อสำเร็จ!</b> GAS พร้อมใช้งาน — CORS ผ่านแล้ว ✅';
+      setSyncBadge('ok');
+    } else {
+      el.innerHTML = '<i class="fa fa-circle-xmark" style="color:var(--red)"></i> GAS ตอบ error: '+d.error;
+    }
   } catch(e) {
-    el.innerHTML = `<i class="fa fa-triangle-exclamation" style="color:var(--amber)"></i> 
-      ทดสอบตรงไม่ได้ (Edge บล็อก CORS) — แต่ Sync แบบ no-cors ยังทำงานได้<br>
-      <small style="color:#888">ลอง Sync โครงการทดสอบ แล้วตรวจสอบใน Google Sheets</small>`;
+    el.innerHTML = '<i class="fa fa-circle-xmark" style="color:var(--red)"></i> เชื่อมต่อไม่ได้: '+e.message+
+      '<br><small>ตรวจสอบ: Deploy เป็น Web app? Who has access = Anyone?</small>';
   }
 }
 
@@ -802,59 +822,68 @@ function saveUrl() {
 }
 
 // ================================================================
-//  GENERATE DOCS — เรียก GAS สร้าง Google Doc แล้วเปิด Drive
+//  GENERATE DOCS — เรียก GAS แบบ fetch จริง รับ download URL กลับ
 // ================================================================
 const DOC_NAMES = {
-  doc1:'ขออนุมัติรับงาน', doc2:'ขออนุมัติราคากลาง/TOR',
-  doc3:'รายงานขอจ้าง',   doc4:'หนังสือเชิญชวน',
+  doc1:'ขออนุมัติรับงาน',   doc2:'ขออนุมัติราคากลาง/TOR',
+  doc3:'รายงานขอจ้าง',     doc4:'หนังสือเชิญชวน',
   doc5:'หนังสือต่อรองราคา', doc6:'รายงานผลการจัดจ้าง',
 };
 
-async function genDoc(docType) {
-  if (!currentId)  { toast('บันทึกโครงการก่อน','err'); return; }
-  if (!GAS_URL)    { toast('ยังไม่ได้ตั้งค่า GAS URL','err'); return; }
+async function genDoc(docType, fakeEvent) {
+  if (!currentId) { toast('บันทึกโครงการก่อน','err'); return; }
+  if (!GAS_URL)   { toast('ยังไม่ได้ตั้งค่า GAS URL','err'); return; }
 
   const docName = DOC_NAMES[docType] || docType;
-  toast(`กำลังสร้าง "${docName}"...`);
-
-  // บันทึก log
-  DB.log.unshift({id:currentId, time:nowStr(), action:'สร้างเอกสาร: '+docName, status:''});
-  saveDB();
+  const card = (fakeEvent||event||{}).currentTarget || document.createElement("div");
+  card.style.opacity='0.5';
+  card.style.pointerEvents='none';
+  toast(`⏳ กำลังสร้าง "${docName}" — รอซักครู่...`);
 
   try {
-    // ส่งคำสั่งไป GAS ผ่าน no-cors FormData
-    const fd = new FormData();
-    fd.append('action','generateGoogleDoc');
-    fd.append('projectId', currentId);
-    fd.append('docType', docType);
-    await fetch(GAS_URL, {method:'POST', body:fd, mode:'no-cors'});
+    const r = await gasAPI({action:'generateGoogleDoc'}, {projectId:currentId, docType});
+    if (!r.ok) throw new Error(r.error);
 
-    // GAS จะสร้างไฟล์ใน Google Drive folder "Solar_Docs"
-    // เปิด Drive folder ที่ถูกต้อง
-    const driveUrl = 'https://drive.google.com/drive/search?q=Solar_Docs';
-    document.getElementById('doc-links').innerHTML += `
-      <div style="margin-top:6px;padding:8px 12px;background:#EAFAF1;border-radius:7px;font-size:13px;display:flex;align-items:center;gap:8px">
+    // GAS ส่ง downloadUrl กลับมาแล้ว — เปิดดาวน์โหลดทันที
+    const linksDiv = document.getElementById('doc-links');
+    linksDiv.innerHTML += `
+      <div style="margin-top:6px;padding:8px 12px;background:#EAFAF1;border-radius:7px;font-size:13px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
         <i class="fa fa-circle-check" style="color:var(--teal)"></i>
-        <span>ส่งคำสั่งสร้าง <b>${docName}</b> แล้ว</span>
-        <a href="${driveUrl}" target="_blank" class="btn bte bsm" style="margin-left:auto">
-          <i class="fa fa-folder-open"></i> เปิด Drive
+        <span><b>${docName}</b> — สร้างเสร็จแล้ว</span>
+        <a href="${r.downloadUrl}" target="_blank" class="btn bte bsm" style="margin-left:auto">
+          <i class="fa fa-download"></i> ดาวน์โหลด .docx
+        </a>
+        <a href="${r.googleDocUrl}" target="_blank" class="btn bo bsm">
+          <i class="fa fa-file-word"></i> เปิด Google Doc
         </a>
       </div>`;
+
+    DB.log.unshift({id:currentId, time:nowStr(), action:'สร้างเอกสาร: '+docName, status:r.ok?'✅':'❌'});
+    saveDB();
     renderLog();
-    toast(`ส่งคำสั่งสร้าง "${docName}" แล้ว — เปิด Google Drive เพื่อดาวน์โหลด`,'ok');
+    toast(`✅ "${docName}" พร้อมดาวน์โหลด`,'ok');
   } catch(e) {
-    toast('เกิดข้อผิดพลาด: '+e.message,'err');
+    toast(`❌ สร้าง "${docName}" ไม่สำเร็จ: `+e.message,'err');
+  } finally {
+    card.style.opacity='1';
+    card.style.pointerEvents='auto';
   }
 }
 
 async function genAllDocs() {
   if (!currentId) { toast('บันทึกโครงการก่อน','err'); return; }
   if (!GAS_URL)   { toast('ยังไม่ได้ตั้งค่า GAS URL','err'); return; }
+  document.getElementById('doc-links').innerHTML = '';
   for (const dt of Object.keys(DOC_NAMES)) {
-    await genDoc(dt);
-    await new Promise(r=>setTimeout(r,800));
+    // หา card แล้วคลิก
+    const cards = document.querySelectorAll('#doc-grid .dc');
+    const idx = Object.keys(DOC_NAMES).indexOf(dt);
+    if (cards[idx]) {
+      const fakeEvent = { currentTarget: cards[idx] };
+      await genDoc.call(null, dt, fakeEvent);
+    }
+    await new Promise(r=>setTimeout(r,1200));
   }
-  toast('ส่งคำสั่งสร้างทุกเอกสารแล้ว ✓','ok');
 }
 
 // ================================================================
